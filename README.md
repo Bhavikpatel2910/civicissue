@@ -56,4 +56,50 @@
 ---
 
 
+---
+
+## 🔑 Authentication Flow
+
+| User Type | Login Method |
+|----------|--------------|
+| Citizen | Email / Password |
+| Staff | Municipal SSO / Staff Login |
+| Admin | Secure Role-Based Login |
+
+---
+
+## 📊 Dashboards
+
+### 🧑 Citizen Dashboard
+- View submitted issues  
+- Resolution status  
+- Contribution points  
+- City ranking  
+
+### 🏢 Staff Dashboard
+- View assigned issues  
+- Update status  
+- Approve or reject reports  
+
+---
+
+## 🛠 Setup Instructions
+
+### 1️⃣ Clone Repository
+```bash
+git clone https://github.com/aryan01109/TEAM-SPARK.git
+cd TEAM-SPARK
+cd backend
+npm install
+node server.js
+civic/html/auth/LoginPage.html
+Create a .env file inside the backend folder:
+MONGO_URI=mongodb://127.0.0.1:27017/TEAM-SPARK
+JWT_SECRET=your_secret_key
+
+
+
+
+
+
 
