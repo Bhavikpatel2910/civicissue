@@ -166,7 +166,7 @@ This architecture ensures that **TEAM-SPARK** can grow from a hackathon project 
 **Aryan Bhoya AND Patel Bhavik **  
 Full-Stack Developer & Civic Tech Innovator  
 
-GitHub: [https://github.com/aryan01109](https://github.com/aryan01109)
+GitHub: [https://github.com/aryan01109](https://github.com/aryan01109) <br>
         [https://github.com/Bhavikpatel2910](https://github.com/Bhavikpatel2910)
 
 
