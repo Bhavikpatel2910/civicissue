@@ -167,7 +167,7 @@ This architecture ensures that **TEAM-SPARK** can grow from a hackathon project 
 Full-Stack Developer & Civic Tech Innovator  
 
 GitHub: [https://github.com/aryan01109](https://github.com/aryan01109) <br>
-        [https://github.com/Bhavikpatel2910](https://github.com/Bhavikpatel2910)
+        <t>[https://github.com/Bhavikpatel2910](https://github.com/Bhavikpatel2910)
 
 
 
