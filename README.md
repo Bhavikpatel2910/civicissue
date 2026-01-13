@@ -86,16 +86,26 @@
 ## 🛠 Setup Instructions
 
 ### 1️⃣ Clone Repository
-```bash
-git clone https://github.com/aryan01109/TEAM-SPARK.git
-cd TEAM-SPARK
-cd backend
-npm install
-node server.js
-civic/html/auth/LoginPage.html
-Create a .env file inside the backend folder:
-MONGO_URI=mongodb://127.0.0.1:27017/TEAM-SPARK
-JWT_SECRET=your_secret_key
+
+---
+## 🏆 Why TEAM-SPARK?
+
+✔ Solves real-world civic problems  
+✔ Scalable & secure  
+✔ Hackathon-grade UI & architecture  
+✔ AI-powered future ready  
+✔ Built for smart cities  
+
+---
+
+## 👨‍💻 Author
+
+**Aryan Bhoya AND Patel Bhavik **  
+Full-Stack Developer & Civic Tech Innovator  
+
+GitHub: [https://github.com/aryan01109](https://github.com/aryan01109)
+
+
 
 
 
