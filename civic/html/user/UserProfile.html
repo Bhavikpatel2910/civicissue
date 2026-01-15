@@ -1,146 +1,124 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="../../css/user/UserProfile.css">
-  <link rel="stylesheet" href="../../css/header.css">
-  <title>UserProfile</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citizen Profile & Impact Dashboard</title>
+
+  <link rel="stylesheet" href="/civic/css/user/UserProfile.css">
 </head>
 <body>
-  
-<div id="header"></div>
 
-  <div class="profile-page">
-
-  <div class="profile-container">
-
-    <!-- SUMMARY CARD -->
-    <div class="profile-summary card">
-
-      <div class="profile-left">
-        <div class="avatar" id="userInitials"></div>
-
-        <div class="user-meta">
-          <div class="user-name">
-            <span id="userName"></span>
-            <span class="role-label" id="roleLabel"></span>
-          </div>
-
-          <div class="user-email" id="userEmail"></div>
-        </div>
-      </div>
-
-      <div class="profile-stats">
-        <div class="stat-small">
-          <div class="stat-value" id="statReports"></div>
-          <div class="stat-label">Total Reports</div>
-        </div>
-        <div class="stat-small">
-          <div class="stat-value" id="statResolved"></div>
-          <div class="stat-label">Issues Resolved</div>
-        </div>
-        <div class="stat-small">
-          <div class="stat-value" id="statPoints"></div>
-          <div class="stat-label">Civic Points</div>
-        </div>
-        <div class="stat-small">
-          <div class="stat-value" id="statRank"></div>
-          <div class="stat-label">Neighborhood Rank</div>
-        </div>
-      </div>
-
-      <div class="profile-progress">
-        <div class="progress-legend">
-          <div>Progress to Community Leader</div>
-          <div class="points-left"><span id="pointsLeft"></span> points to go</div>
-        </div>
-
-        <div class="progress-wrap">
-          <div id="progressBar" class="progress-bar"></div>
-        </div>
-      </div>
-
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="icon">🏙️</span>
+      <h1>CivicReport</h1>
     </div>
 
-    <!-- TABS -->
-    <div class="tabs card">
-      <button class="tab active" data-tab="achievements">Achievements</button>
-      <button class="tab" data-tab="activity">Activity</button>
-      <button class="tab" data-tab="impact">Impact</button>
+    <nav class="nav">
+      <a href="/civic/html/user/UserDashboard.html">Dashboard</a>
+      <a href="/civic/html/user/ReportIssue.html">Reports</a>
+      <a href="/civic/html/user/CommunityPage.html">Community</a>
+      <a class="active" href="/civic/html/user/UserProfile.html">Profile</a>
+    </nav>
+
+    <div class="header-right">
+      <input type="text" placeholder="Search reports…">
+      <div class="avatar"></div>
     </div>
-
-    <!-- CONTENT -->
-    <div class="profile-grid">
-
-      <!-- ACHIEVEMENTS -->
-      <div id="tab-achievements">
-        <div class="card badges-card">
-          <h4 class="card-title">Civic Badges</h4>
-          <div id="badgesList" class="badges-grid"></div>
-        </div>
-
-        <div class="card leaderboard-card">
-          <h4 class="card-title">Community Leaderboard</h4>
-          <ol id="leaderboard" class="leaderboard"></ol>
-        </div>
-      </div>
-
-      <!-- ACTIVITY -->
-      <div id="tab-activity" style="display:none;">
-        <div class="card activity-card full-width">
-          <h4 class="card-title">Recent Activity</h4>
-          <ul id="activityList" class="activity-list"></ul>
-        </div>
-      </div>
-
-      <!-- IMPACT -->
-      <div id="tab-impact" style="display:none;">
-        <div class="card impact-left">
-          <h4 class="card-title">Your Impact</h4>
-          <div class="impact-row">
-            <div class="label">Issues You've Helped Resolve</div>
-            <div class="value" id="impactResolved"></div>
-          </div>
-
-          <div class="impact-row">
-            <div class="label">Community Upvotes Received</div>
-            <div class="value" id="impactUpvotes"></div>
-          </div>
-
-          <div class="impact-row">
-            <div class="label">Average Response Time</div>
-            <div class="value" id="impactAvgDays"></div>
-          </div>
-        </div>
-
-        <div class="card impact-right">
-          <h4 class="card-title">Contribution Timeline</h4>
-
-          <div class="timeline-stats">
-            <div class="tl-box green">
-              <div class="tl-value" id="tlResolved"></div>
-              <div class="tl-label">Issues Resolved</div>
-            </div>
-
-            <div class="tl-box blue">
-              <div class="tl-value" id="tlProgress"></div>
-              <div class="tl-label">In Progress</div>
-            </div>
-
-            <div class="tl-box yellow">
-              <div class="tl-value" id="tlSuccess"></div>
-              <div class="tl-label">Success Rate</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
   </div>
+</header>
 
-</div>
-<script src="../../js/user/UserProfile.js"></script>
+<main class="container">
+
+  <!-- PROFILE HEADER -->
+  <section class="profile-header">
+    <div class="profile-left">
+      <div class="profile-pic"></div>
+      <div>
+        <h2>Alex Johnson <span class="badge">Level 12</span></h2>
+        <p class="verified">✔ Civic Hero Rank</p>
+        <p class="muted">Member since October 2023 • San Francisco, CA</p>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="primary">New Report</button>
+      <button class="secondary">Edit Profile</button>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stat">
+      <span>Total Reports</span>
+      <strong>124</strong>
+    </div>
+    <div class="stat">
+      <span>Resolved Issues</span>
+      <strong>89</strong>
+    </div>
+    <div class="stat">
+      <span>Impact Points</span>
+      <strong>2,450</strong>
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <section class="grid">
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="tabs">
+        <button class="tab active">Achievements</button>
+        <button class="tab">Contributions</button>
+        <button class="tab">Neighborhood Impact</button>
+      </div>
+
+      <div class="badges">
+        <div class="badge-card">
+          🛣️
+          <p>Pothole Patrol</p>
+          <small>10 Potholes</small>
+        </div>
+        <div class="badge-card">
+          🌳
+          <p>Green Thumb</p>
+          <small>Park Hero</small>
+        </div>
+        <div class="badge-card">
+          ⚡
+          <p>Early Responder</p>
+          <small>1h Response</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="card">
+        <h3>Level Progress</h3>
+        <div class="progress">
+          <div class="bar" style="width:85%"></div>
+        </div>
+        <p>2,450 / 3,000 XP</p>
+      </div>
+
+      <div class="card highlight">
+        <h4>Monthly Impact</h4>
+        <strong>+450 pts</strong>
+        <p>Top 5% in your district</p>
+      </div>
+    </aside>
+
+  </section>
+</main>
+
+<footer class="footer">
+  © 2024 CivicReport. Empowering communities together.
+</footer>
+
+<script src="/civic/js/user/profile.js"></script>
 </body>
 </html>

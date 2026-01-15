@@ -1,100 +1,404 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Citizen Dashboard | CityTransparency</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Citizen Personal Dashboard - CityTransparency</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13b6ec",
+            "background-light": "#f6f8f8",
+            "background-dark": "#101d22",
+            "success": "#078836",
+            "warning": "#f59e0b",
+          },
+          fontFamily: {
+            "display": ["Public Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Public Sans', sans-serif;
+    }
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
 
-  <!-- CSS -->
+    .filled-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
   <link rel="stylesheet" href="/civic/css/user/UserDashboard.css">
 </head>
-<body>
 
-<header class="header">
-  <div class="header-inner">
-    <div class="brand">
-      <span class="material-symbols-outlined">location_city</span>
-      <h2>CityTransparency</h2>
-    </div>
-
-    <nav class="nav">
-      <a class="active" href="#">My Dashboard</a>
-      <a href="/civic/html/user/MyReports.html">My Reports</a>
-      <a href="/civic/html/user/ReportIssue.html">ReportIssue</a>
-      <a href="#">Public Portal</a>
-      <a href="#">Community Board</a>
-    </nav>
-
-    <div class="user">
-      <div class="user-info">
-        <span class="rank">Civic Hero</span>
-        <span class="name" id="citizenName">Alex Johnson</span>
+<body class="bg-background-light dark:bg-background-dark text-[#111618] dark:text-white transition-colors duration-200">
+  <header
+    class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-solid border-[#f0f3f4] dark:border-white/10 px-4 md:px-10 py-3">
+    <div class="max-w-[1200px] mx-auto flex items-center justify-between whitespace-nowrap">
+      <div class="flex items-center gap-3 text-[#111618] dark:text-white">
+        <div class="flex items-center justify-center bg-primary rounded-lg p-1.5 text-white">
+          <span class="material-symbols-outlined">location_city</span>
+        </div>
+        <h2 class="text-lg font-bold leading-tight tracking-[-0.015em] font-display">CityTransparency</h2>
       </div>
-      <img class="avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIXGhQPt3eCXznlXKZt8Qa_gXNVsIdBiQeBtpGirzy-9eTcw0fDzvsnpPVFwQGOIl38j5zNsqkf5xCZkWU1pH0-OjMHRUAlbKtpSTn6lWtBfaW0Sj69ZwAdY2Kfm7g_QHYDmW7qx8F6DoPGFhWUEqFDOQR9cVkuVvgtXOomLkFjCX61u-8cO9apGihWx3g5QDXt38Kdr0olVuagOS2S99nPwNwiJ0XDzRsxDfxEGo4MtfTvnMg6OYPQfWZikWJTHqyOmBnFSDqu8Y1" alt="Profile">
+      <div class="flex flex-1 justify-end gap-8 items-center">
+        <nav class="hidden md:flex items-center gap-9">
+          <a class="text-sm font-medium hover:text-primary transition-colors text-primary" href="#">My Dashboard</a>
+          <a class="text-sm font-medium hover:text-primary transition-colors" href="/civic/html/user/ReportIssue.html">Report Issue</a>
+          <a class="text-sm font-medium hover:text-primary transition-colors" href="/civic/html/user/CommunityPage.html">Community Board</a>
+        </nav>
+        <div class="flex items-center gap-4 border-l border-gray-200 dark:border-white/10 pl-8">
+          <div class="text-right hidden sm:block">
+            <p class="text-xs font-bold text-gray-400 uppercase">Civic Hero</p>
+            <p class="text-sm font-bold">Alex Johnson</p>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-primary/20 border-2 border-primary overflow-hidden">
+            <img alt="Profile" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIXGhQPt3eCXznlXKZt8Qa_gXNVsIdBiQeBtpGirzy-9eTcw0fDzvsnpPVFwQGOIl38j5zNsqkf5xCZkWU1pH0-OjMHRUAlbKtpSTn6lWtBfaW0Sj69ZwAdY2Kfm7g_QHYDmW7qx8F6DoPGFhWUEqFDOQR9cVkuVvgtXOomLkFjCX61u-8cO9apGihWx3g5QDXt38Kdr0olVuagOS2S99nPwNwiJ0XDzRsxDfxEGo4MtfTvnMg6OYPQfWZikWJTHqyOmBnFSDqu8Y1" />
+          </div>
+        </div>
       </div>
-  </div>
-</header>
-
-<main class="container">
-
-  <!-- Welcome -->
-  <section class="welcome">
-    <h1>Welcome back, <span id="welcomeName">Alex</span> 👋</h1>
-    <p>You’re in the top <strong>5%</strong> of contributors this month.</p>
-  </section>
-
-  <!-- Stats -->
-  <section class="stats">
-    <div class="card">
-      <h3>Total Reports</h3>
-      <p class="big">42</p>
     </div>
-    <div class="card">
-      <h3>Resolved</h3>
-      <p class="big success">38</p>
+  </header>
+  <main class="max-w-[1200px] mx-auto px-4 py-8">
+    <section class="mb-8">
+      <div
+        class="bg-white dark:bg-[#1a262b] rounded-2xl p-6 md:p-8 border border-[#dbe3e6] dark:border-white/10 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-6">
+          <div class="relative">
+            <div
+              class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white shadow-lg shadow-primary/20">
+              <span class="material-symbols-outlined text-4xl filled-icon">military_tech</span>
+            </div>
+            <div
+              class="absolute -bottom-2 -right-2 bg-success text-white text-[10px] font-bold px-2 py-1 rounded-full border-2 border-white dark:border-[#1a262b]">
+              LVL 12
+            </div>
+          </div>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-black mb-1">Welcome back, Alex!</h1>
+            <p class="text-gray-500 dark:text-gray-400">You're in the top <span class="text-primary font-bold">5%</span>
+              of contributors in Oak Park this month.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 w-full md:w-auto">
+          <div
+            class="flex-1 md:flex-none bg-[#f0f9ff] dark:bg-primary/10 rounded-xl px-6 py-4 border border-primary/20 text-center md:text-left">
+            <p class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Impact Points</p>
+            <div class="flex items-center justify-center md:justify-start gap-2">
+              <span class="material-symbols-outlined text-primary filled-icon">stars</span>
+              <span class="text-2xl font-black text-[#111618] dark:text-white leading-none">2,840</span>
+            </div>
+          </div>
+          <div
+            class="flex-1 md:flex-none bg-[#fefce8] dark:bg-warning/10 rounded-xl px-6 py-4 border border-warning/20 text-center md:text-left">
+            <p class="text-[10px] font-bold text-warning uppercase tracking-wider mb-1">Current Rank</p>
+            <div class="flex items-center justify-center md:justify-start gap-2">
+              <span class="material-symbols-outlined text-warning filled-icon">workspace_premium</span>
+              <span class="text-2xl font-black text-[#111618] dark:text-white leading-none">Civic Hero</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div
+        class="bg-white dark:bg-background-dark p-6 rounded-xl border border-[#dbe3e6] dark:border-white/10 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined">description</span>
+          </div>
+          <span class="text-xs font-bold text-gray-400">Lifetime</span>
+        </div>
+        <p class="text-3xl font-black">42</p>
+        <p class="text-sm font-bold text-gray-500">My Total Reports</p>
+        <div class="mt-4 w-full bg-gray-100 dark:bg-white/5 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+        </div>
+      </div>
+      <div
+        class="bg-white dark:bg-background-dark p-6 rounded-xl border border-[#dbe3e6] dark:border-white/10 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center text-success">
+            <span class="material-symbols-outlined">task_alt</span>
+          </div>
+          <span class="text-xs font-bold text-success">+3 this week</span>
+        </div>
+        <p class="text-3xl font-black">38</p>
+        <p class="text-sm font-bold text-gray-500">Issues Resolved</p>
+        <div class="mt-4 w-full bg-gray-100 dark:bg-white/5 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-success h-full rounded-full" style="width: 90%"></div>
+        </div>
+      </div>
+      <div
+        class="bg-white dark:bg-background-dark p-6 rounded-xl border border-[#dbe3e6] dark:border-white/10 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
+            <span class="material-symbols-outlined">pending_actions</span>
+          </div>
+          <span class="text-xs font-bold text-warning">Action needed</span>
+        </div>
+        <p class="text-3xl font-black">4</p>
+        <p class="text-sm font-bold text-gray-500">Active Contributions</p>
+        <div class="mt-4 w-full bg-gray-100 dark:bg-white/5 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-warning h-full rounded-full" style="width: 35%"></div>
+        </div>
+      </div>
+    </section>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="flex items-center justify-between px-2">
+          <h2 class="text-2xl font-bold">My Recent Activity</h2>
+          <a href="/civic/html/user/MyReports.html" class="text-sm font-bold text-primary hover:underline">View all reports</>
+        </div>
+        <div
+          class="bg-white dark:bg-background-dark rounded-2xl border border-[#dbe3e6] dark:border-white/10 overflow-hidden">
+          <div
+            class="p-6 border-b border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white shrink-0">
+                  <span class="material-symbols-outlined text-xl">engineering</span>
+                </div>
+                <div class="w-0.5 h-full bg-gray-100 dark:bg-white/10 my-2"></div>
+              </div>
+              <div class="flex-1 pb-2">
+                <div class="flex items-center justify-between mb-1">
+                  <h4 class="font-bold text-base">Pothole on 5th Ave</h4>
+                  <span class="text-xs font-medium text-gray-400">2 hours ago</span>
+                </div>
+                <div class="flex items-center gap-2 mb-3">
+                  <span
+                    class="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider">In
+                    Progress</span>
+                  <span class="text-xs text-gray-500">Public Works Department is on-site.</span>
+                </div>
+                <div class="bg-gray-50 dark:bg-white/5 rounded-xl p-3 flex items-center gap-4">
+                  <img alt="Update" class="w-12 h-12 rounded-lg object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp2f5Mk2XZzavrMFu_LhH2js_J_xM3EYgWJVlIr0iteyfHoV3MpFNyQ9uLlNz3hkAPJPvW4kz0e_8aHTrqF6zhbkHPmAIdCgYdX1bTGrBBZicVvE2cvrAzA73pnnblDNHPUbiBSr4U6qtZyVDfxeoFnu8gwZne9aOYlm0aNC4CxeSumAeZJilu81DDgYkKxuAOzCHFJTi4nj7fL7SRy2xdsI7CF_Lue14RqfjUGgWFUQyPrEpBtbQEFx98gMsZq8rUjpHutIJn52x1" />
+                  <p class="text-sm text-gray-600 dark:text-gray-400 italic">"The crew has arrived and repair work is
+                    scheduled to finish by 4 PM today."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="p-6 border-b border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-success flex items-center justify-center text-white shrink-0">
+                  <span class="material-symbols-outlined text-xl">check_circle</span>
+                </div>
+                <div class="w-0.5 h-full bg-gray-100 dark:bg-white/10 my-2"></div>
+              </div>
+              <div class="flex-1 pb-2">
+                <div class="flex items-center justify-between mb-1">
+                  <h4 class="font-bold text-base">Graffiti in Central Park</h4>
+                  <span class="text-xs font-medium text-gray-400">Yesterday, 4:15 PM</span>
+                </div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class="px-2 py-0.5 rounded-full bg-success/10 text-success text-[10px] font-bold uppercase tracking-wider">Resolved</span>
+                  <span class="text-xs font-bold text-primary">+150 Impact Points earned</span>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Cleaning crew successfully removed the markings from
+                  the north fountain area.</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <div
+                  class="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center text-gray-500 shrink-0">
+                  <span class="material-symbols-outlined text-xl">send</span>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <h4 class="font-bold text-base">New Report: Street Light Out</h4>
+                  <span class="text-xs font-medium text-gray-400">Oct 24, 2024</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-500 text-[10px] font-bold uppercase tracking-wider">Submitted</span>
+                  <span class="text-xs text-gray-500">Location: Oak &amp; Pine Street</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="/civic/html/user/ReportIssue.html"
+          class="w-full py-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-white/10 text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined">add_circle</span>
+          Report a New Issue
+        </a>
+      </div>
+      <div class="space-y-8">
+        <section>
+          <div class="flex items-center justify-between mb-4 px-2">
+            <h3 class="font-bold text-lg">My Earned Badges</h3>
+            <span class="text-xs font-bold text-primary">8 / 24</span>
+          </div>
+          <div
+            class="bg-white dark:bg-background-dark p-6 rounded-2xl border border-[#dbe3e6] dark:border-white/10 shadow-sm">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                <div
+                  class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-3xl filled-icon">volunteer_activism</span>
+                </div>
+                <span class="text-[10px] font-bold text-center leading-tight">First Report</span>
+              </div>
+              <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                <div
+                  class="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center text-success group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-3xl filled-icon">verified_user</span>
+                </div>
+                <span class="text-[10px] font-bold text-center leading-tight">Trustworthy</span>
+              </div>
+              <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                <div
+                  class="w-16 h-16 rounded-full bg-warning/10 flex items-center justify-center text-warning group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-3xl filled-icon">eco</span>
+                </div>
+                <span class="text-[10px] font-bold text-center leading-tight">Green Citizen</span>
+              </div>
+              <div class="flex flex-col items-center gap-2 opacity-30 grayscale group">
+                <div
+                  class="w-16 h-16 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500">
+                  <span class="material-symbols-outlined text-3xl">emoji_events</span>
+                </div>
+                <span class="text-[10px] font-bold text-center leading-tight">City Legend</span>
+              </div>
+              <div class="flex flex-col items-center gap-2 opacity-30 grayscale">
+                <div
+                  class="w-16 h-16 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500">
+                  <span class="material-symbols-outlined text-3xl">handyman</span>
+                </div>
+                <span class="text-[10px] font-bold text-center leading-tight">Fixer</span>
+              </div>
+              <div class="flex flex-col items-center gap-2 opacity-30 grayscale">
+                <div
+                  class="w-16 h-16 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500">
+                  <span class="material-symbols-outlined text-3xl">group</span>
+                </div>
+                <span class="text-[10px] font-bold text-center leading-tight">Motivator</span>
+              </div>
+            </div>
+            <button
+              class="w-full mt-6 py-2 text-sm font-bold text-gray-500 hover:text-primary transition-colors border-t border-gray-100 dark:border-white/10 pt-4">View
+              All Badges</button>
+          </div>
+        </section>
+        <section>
+          <div class="flex items-center justify-between mb-4 px-2">
+            <h3 class="font-bold text-lg">Neighborhood Challenges</h3>
+          </div>
+          <div class="space-y-4">
+            <div
+              class="bg-white dark:bg-background-dark p-4 rounded-xl border border-[#dbe3e6] dark:border-white/10 shadow-sm group hover:border-primary transition-colors cursor-pointer">
+              <div class="flex items-start gap-3 mb-3">
+                <div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <span class="material-symbols-outlined text-lg">park</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Park Guardian</h4>
+                  <p class="text-xs text-gray-500">Report 3 park-related issues this week.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] font-bold mb-1">
+                <span class="text-primary">66% Complete</span>
+                <span>2 / 3</span>
+              </div>
+              <div class="w-full bg-gray-100 dark:bg-white/5 h-1 rounded-full">
+                <div class="bg-primary h-full rounded-full" style="width: 66%"></div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-background-dark p-4 rounded-xl border border-[#dbe3e6] dark:border-white/10 shadow-sm group hover:border-warning transition-colors cursor-pointer">
+              <div class="flex items-start gap-3 mb-3">
+                <div class="w-8 h-8 rounded bg-warning/10 flex items-center justify-center text-warning shrink-0">
+                  <span class="material-symbols-outlined text-lg">lightbulb</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold">Night Watcher</h4>
+                  <p class="text-xs text-gray-500">Find and report an outage in your street.</p>
+                </div>
+              </div>
+              <!-- <div class="flex items-center justify-between text-xs font-bold">
+                <span class="text-warning">+500 XP</span>
+                <span class="text-gray-400">Join Challenge</span>
+              </div> -->
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
-    <div class="card">
-      <h3>Active</h3>
-      <p class="big warning">4</p>
-    </div>
-  </section>
-
-  <!-- Activity -->
-  <section class="activity">
-    <h2>My Recent Activity</h2>
-
-    <div class="activity-item">
-      <span class="material-symbols-outlined">engineering</span>
+  </main>
+  <footer class="bg-white dark:bg-background-dark border-t border-gray-100 dark:border-white/10 py-12 mt-12">
+    <div class="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="col-span-1 md:col-span-2">
+        <div class="flex items-center gap-3 text-[#111618] dark:text-white mb-4">
+          <div class="flex items-center justify-center bg-primary rounded-lg p-1.5 text-white">
+            <span class="material-symbols-outlined">location_city</span>
+          </div>
+          <h2 class="text-lg font-bold leading-tight font-display">CityTransparency</h2>
+        </div>
+        <p class="text-gray-500 max-w-sm text-sm">
+          Empowering citizens to take charge of their urban environment through transparency and real-time
+          collaboration.
+        </p>
+      </div>
       <div>
-        <h4>Pothole on 5th Ave</h4>
-        <p>Status: In Progress</p>
+        <h4 class="font-bold mb-4">User Portal</h4>
+        <ul class="flex flex-col gap-2 text-sm text-gray-500">
+          <li><a class="hover:text-primary" href="/civic/html/setting/user/account setting.html">My Profile Settings</a></li>
+          <li><a class="hover:text-primary" href="/civic/html/setting/user/Settings.html">Notification Prefs</a></li>
+          <li><a class="hover:text-primary" href="/civic/html/user/reportprogress.html">Impact History</a></li>
+          <li><a class="hover:text-primary" href="#">Leaderboards</a></li>
+        </ul>
       </div>
-    </div>
-
-    <div class="activity-item resolved">
-      <span class="material-symbols-outlined">check_circle</span>
       <div>
-        <h4>Graffiti in Central Park</h4>
-        <p>Resolved · +150 points</p>
+        <h4 class="font-bold mb-4">Help &amp; Support</h4>
+        <ul class="flex flex-col gap-2 text-sm text-gray-500">
+          <li><a class="hover:text-primary" href="#">Filing Guidelines</a></li>
+          <li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+          <li><a class="hover:text-primary" href="#">Contact 311</a></li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <button class="report-btn">
-    <span class="material-symbols-outlined">add_circle</span>
-    <a href="/civic/html/user/ReportIssue.html">Report a New Issue
-  </button>
-
-</main>
-
-<footer class="footer">
-  <p>© 2024 CityTransparency Citizen Dashboard</p>
-</footer>
-
+    <div
+      class="max-w-[1200px] mx-auto px-4 mt-12 pt-8 border-t border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
+      <p>© 2024 CityTransparency Citizen Dashboard.</p>
+      <div class="flex gap-6">
+        <a class="hover:text-primary" href="#">System Status</a>
+        <a class="hover:text-primary" href="#">API Feedback</a>
+      </div>
+    </div>
+  </footer>
 <script src="/civic/js/user/UserDashboard.js"></script>
 </body>
+
 </html>

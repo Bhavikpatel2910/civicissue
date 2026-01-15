@@ -310,7 +310,7 @@ body {
 /* FORCE PASSWORD MASKING */
 input[type="password"] {
   -webkit-text-security: disc;
-  text-security: disc;
+     
 }
 
 /* prevent font glitches */

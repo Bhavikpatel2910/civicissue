@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neighborhood Settings</title>
+
+  <link rel="stylesheet" href="/civic/css/user/usersettings.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="logo">📍</span>
+      <h1>Civic Alert</h1>
+    </div>
+
+    <nav class="nav">
+      <a href="#">Dashboard</a>
+      <a href="#">Reports</a>
+      <a href="#">Events</a>
+      <a class="active" href="#">Settings</a>
+    </nav>
+
+    <div class="avatar"></div>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<main class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>Neighborhood Settings</h2>
+    <p class="muted">
+      Customize your civic monitoring zone and notifications.
+    </p>
+
+    <!-- SEARCH -->
+    <label class="label">Home Neighborhood</label>
+    <div class="search-box">
+      <input
+        type="text"
+        value="123 Civic Lane, Urban Heights"
+        placeholder="Search for your area"
+      />
+    </div>
+
+    <!-- RADIUS -->
+    <div class="radius">
+      <div class="radius-header">
+        <span class="label">Interest Radius</span>
+        <span id="radiusValue" class="pill">2.5 km</span>
+      </div>
+
+      <input
+        id="radiusSlider"
+        type="range"
+        min="0.5"
+        max="10"
+        step="0.5"
+        value="2.5"
+      />
+
+      <div class="range-scale">
+        <span>500m</span>
+        <span>5km</span>
+        <span>10km</span>
+      </div>
+    </div>
+
+    <!-- TOGGLES -->
+    <div class="toggles">
+      <span class="label">Notification Preferences</span>
+
+      <div class="toggle-row">
+        <div>
+          <strong>New Reports in my Area</strong>
+          <small>Potholes, safety, maintenance</small>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <strong>Community Events</strong>
+          <small>Town halls, clean-ups</small>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span></span>
+        </label>
+      </div>
+    </div>
+
+    <button class="primary full">Save Area Settings</button>
+  </aside>
+
+  <!-- MAP -->
+  <section class="map">
+    <div class="map-overlay"></div>
+
+    <div class="radius-circle">
+      <div class="home-pin">
+        <span>Your Home Base</span>
+      </div>
+    </div>
+
+    <!-- FLOATING STATS -->
+    <div class="stats">
+      <div class="stat">
+        <span>Open Reports</span>
+        <strong>12</strong>
+      </div>
+      <div class="stat">
+        <span>Events Today</span>
+        <strong>3</strong>
+      </div>
+    </div>
+
+    <!-- MAP CONTROLS -->
+    <div class="map-controls">
+      <button>＋</button>
+      <button>－</button>
+      <button>◎</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="/civic/js/settings/user/Neighborhood Settings.js"></script>
+</body>
+</html>

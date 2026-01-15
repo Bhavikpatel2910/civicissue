@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Details - CivicReport</title>
+
+  <link rel="stylesheet" href="/civic/css/user/usersettings.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="logo"></span>
+      <h1>CivicReport</h1>
+    </div>
+
+    <nav class="nav">
+      <a href="#">Dashboard</a>
+      <a href="#">Reports</a>
+      <a href="#">Map</a>
+      <a class="active" href="#">Settings</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn">🔔</button>
+      <div class="avatar"></div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="container">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="#">Settings</a>
+    <span>/</span>
+    <strong>Account Details</strong>
+  </div>
+
+  <!-- PAGE TITLE -->
+  <header class="page-header">
+    <h2>Account Settings</h2>
+    <p>Manage your profile information and contact details.</p>
+  </header>
+
+  <!-- CARD -->
+  <section class="card split">
+
+    <!-- LEFT -->
+    <div class="profile-image">
+      <h3>Profile Image</h3>
+
+      <div class="image-wrapper">
+        <div class="image"></div>
+        <div class="overlay">📷</div>
+      </div>
+
+      <button class="primary full">Upload Photo</button>
+      <button class="secondary full">Remove</button>
+
+      <p class="hint">JPG, GIF or PNG. Max size 800KB</p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="form-area">
+      <h3>Personal Details</h3>
+
+      <form class="form-grid">
+        <div class="field full">
+          <label>Full Name</label>
+          <input type="text" value="John Doe" />
+        </div>
+
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" value="john.doe@example.com" />
+        </div>
+
+        <div class="field">
+          <label>Phone Number</label>
+          <input type="tel" value="+1 (555) 123-4567" />
+        </div>
+
+        <div class="field full">
+          <label>Neighborhood</label>
+          <select>
+            <option>Downtown District</option>
+            <option selected>West End Heights</option>
+            <option>Riverside Commons</option>
+            <option>Oakwood Gardens</option>
+          </select>
+          <small>Used to prioritize local alerts.</small>
+        </div>
+      </form>
+
+      <!-- SECURITY -->
+      <div class="security">
+        <div>
+          <strong>Two-Factor Authentication</strong>
+          <p>Keep your account secure with 2FA.</p>
+        </div>
+        <button class="link">Enable</button>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<!-- FLOATING ACTIONS -->
+<div class="floating-actions">
+  <button class="secondary">Cancel</button>
+  <button class="primary">Save Changes</button>
+</div>
+
+<script src="/civic/js/settings/user/account setting.js"></script>
+</body>
+</html>

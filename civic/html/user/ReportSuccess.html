@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Report Submitted Successfully | CityFix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <link rel="stylesheet" href="/civic/css/user/ReportSuccess.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="material-symbols-outlined">domain</span>
+      <h2>CityFix</h2>
+    </div>
+
+    <nav>
+      <a href="#">Dashboard</a>
+      <a href="#">Reports</a>
+      <a href="#">Community</a>
+      <a href="#">Leaderboard</a>
+    </nav>
+
+    <div class="avatar"></div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Success Icon -->
+  <div class="success-header">
+    <div class="icon">
+      <span class="material-symbols-outlined">check_circle</span>
+    </div>
+
+    <h1>Thank You, Citizen!</h1>
+    <p>Your report has been successfully submitted.  
+       You're helping make the city safer for everyone.</p>
+  </div>
+
+  <!-- Reward Card -->
+  <section class="reward">
+    <p class="label">Civic Points Earned</p>
+    <div class="points">
+      <span class="value">+50</span>
+      <span class="unit">XP</span>
+    </div>
+    <div class="bonus">
+      <span class="material-symbols-outlined">trending_up</span>
+      Daily Bonus Applied
+    </div>
+  </section>
+
+  <!-- Report Summary -->
+  <section class="summary">
+    <div class="image"></div>
+
+    <div class="details">
+      <div class="top">
+        <span class="id">Report ID: #CF-99021</span>
+        <span class="status">Submitted</span>
+      </div>
+
+      <h3>Pothole on 5th Avenue</h3>
+      <p class="location">Near Central Park South Entrance</p>
+
+      <div class="time">
+        <span class="material-symbols-outlined">schedule</span>
+        Submitted just now
+      </div>
+    </div>
+  </section>
+
+  <!-- Rank Progress -->
+  <section class="rank">
+    <div class="rank-header">
+      <div>
+        <span class="material-symbols-outlined">military_tech</span>
+        Next Rank: <strong>Urban Guardian</strong>
+      </div>
+      <span class="xp">820 / 1000 XP</span>
+    </div>
+
+    <div class="progress-bar">
+      <div class="fill"></div>
+    </div>
+
+    <p class="hint">180 XP more to unlock the Elite Fixer badge!</p>
+  </section>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="primary">
+      <span class="material-symbols-outlined">analytics</span>
+      View Report Status
+    </button>
+
+    <button class="secondary">
+      <span class="material-symbols-outlined">home</span>
+       <a href="/civic/html/user/UserDashboard.html">Return to Dashboard</a>
+    </button>
+  </div>
+
+  <p class="footer-note">
+    Need to add more details?
+    <a href="#">Edit this report</a> within 24 hours.
+  </p>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon">
+    <span class="material-symbols-outlined">workspace_premium</span>
+  </div>
+  <div>
+    <strong>New Achievement!</strong>
+    <p>First Report of the Week</p>
+  </div>
+</div>
+
+<script src="/civic/js/user/ReportSuccess.js"></script>
+</body>
+</html>

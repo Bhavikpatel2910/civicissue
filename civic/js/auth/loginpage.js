@@ -1,113 +1,141 @@
-/* =========================
-   AUTO-FILL EMAIL
-========================= */
-const savedEmail = localStorage.getItem("lastRegisteredEmail");
-const emailInput = document.getElementById("email");
-if (savedEmail && emailInput) {
-  emailInput.value = savedEmail;
-  localStorage.removeItem("lastRegisteredEmail");
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-/* =========================
-   ROLE SWITCH
-========================= */
-const roles = document.querySelectorAll(".role");
-const ssoLink = document.getElementById("ssoLink");
-let activeRole = "citizen";
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const form = document.getElementById("loginForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const btnText = submitBtn?.querySelector(".btn-text");
+  const ssoLink = document.getElementById("ssoLink");
+  const googleBtn = document.getElementById("googleBtn");
 
-roles.forEach(btn => {
-  btn.addEventListener("click", () => {
-    roles.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    activeRole = btn.dataset.role;
-    ssoLink.style.display = activeRole === "staff" ? "block" : "none";
+  // =========================
+  // AUTO FILL EMAIL
+  // =========================
+  const savedEmail = localStorage.getItem("lastRegisteredEmail");
+  if (savedEmail && emailInput) {
+    emailInput.value = savedEmail;
+    localStorage.removeItem("lastRegisteredEmail");
+  }
+
+  // =========================
+  // ROLE SWITCH
+  // =========================
+  let activeRole = "citizen";
+
+  document.querySelectorAll(".role").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".role").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      activeRole = btn.dataset.role;
+
+      if (ssoLink) {
+        ssoLink.style.display = activeRole === "staff" ? "block" : "none";
+      }
+    });
   });
-});
-ssoLink.style.display = "none";
 
-/* =========================
-   PASSWORD TOGGLE
-========================= */
-const passwordInput = document.getElementById("password");
-const togglePassword = document.getElementById("togglePassword");
+  if (ssoLink) ssoLink.style.display = "none";
 
-togglePassword.addEventListener("click", () => {
-  passwordInput.type = passwordInput.type === "password" ? "text" : "password";
-});
-
-/* =========================
-   LOGIN
-========================= */
-const form = document.getElementById("loginForm");
-const submitBtn = document.getElementById("submitBtn");
-const spinner = submitBtn.querySelector(".spinner");
-const btnText = submitBtn.querySelector(".btn-text");
-
-const currentPath = window.location.pathname;
-const basePath = currentPath.split("/civic")[0];
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  if (activeRole === "staff") {
-    alert("City staff must login using Municipal SSO");
-    return;
+  // =========================
+  // PASSWORD TOGGLE
+  // =========================
+  const togglePassword = document.getElementById("togglePassword");
+  if (togglePassword && passwordInput) {
+    togglePassword.onclick = () => {
+      passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+    };
   }
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
+  // =========================
+  // NORMAL LOGIN
+  // =========================
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-  if (!email || !password) {
-    alert("Email and password required");
-    return;
+      if (activeRole === "staff") {
+        alert("Staff must use Municipal SSO");
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!email || !password) {
+        alert("Email and password required");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      btnText.textContent = "Signing in...";
+
+      try {
+        const res = await fetch("http://localhost:5000/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })   // 🔥 FIXED
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.message || "Login failed");
+          submitBtn.disabled = false;
+          btnText.textContent = "Sign In";
+          return;
+        }
+
+        localStorage.setItem("citizenSession", JSON.stringify({
+          token: data.token,
+          role: data.role,
+          name: data.name,
+          loginTime: Date.now()
+        }));
+
+        window.location.href =
+          data.role === "Staff"
+            ? "/civic/html/admin/AdminDashboard.html"
+            : "/civic/html/user/UserDashboard.html";
+
+      } catch {
+        alert("Server not reachable");
+        submitBtn.disabled = false;
+        btnText.textContent = "Sign In";
+      }
+    });
   }
 
-  btnText.textContent = "Signing in...";
- if (spinner) spinner.classList.remove("hidden");
-  submitBtn.disabled = true;
+  // =========================
+  // GOOGLE LOGIN
+  // =========================
+  if (window.google && googleBtn) {
+    google.accounts.id.initialize({
+      client_id: "YOUR_REAL_GOOGLE_CLIENT_ID",
+      callback: async (response) => {
+        const res = await fetch("http://localhost:5000/api/google-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: response.credential })
+        });
 
-  console.log("LOGIN PAYLOAD:", {
-  identifier: email,
-  password
-});
+        const data = await res.json();
+        if (!res.ok) return alert("Google login failed");
 
-  try {
-    const res = await fetch("http://localhost:5000/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        identifier: email,
-        password
-      })
+        localStorage.setItem("citizenSession", JSON.stringify({
+          token: data.token,
+          role: data.role,
+          name: data.name,
+          loginTime: Date.now()
+        }));
+
+        window.location.href = "/civic/html/user/UserDashboard.html";
+      }
     });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.message);
-      if (spinner) spinner.classList.add("hidden");
-      if (btnText) btnText.textContent = "Signing in...";
-      submitBtn.disabled = false;
-      return;
-    }
-
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
-    localStorage.setItem("name", data.name);
-
-// Redirect based on role
-     if (data.role === "Staff") {
-     window.location.href = basePath + "/html/admin/AdminDashboard.html";
-} 
-else if (data.role === "Citizen" || data.role === "User") {
-      window.location.href = basePath + "/html/user/UserDashboard.html";
-}
-else {
-  alert("Unknown role: " + data.role);
-}
-
-
-  } catch {
-    alert("Server not reachable");
+    googleBtn.onclick = () => {
+      google.accounts.id.prompt();  // opens Google login popup
+    };
   }
+
 });

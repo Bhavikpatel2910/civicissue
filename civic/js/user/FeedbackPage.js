@@ -96,7 +96,28 @@ form.addEventListener("submit", async (e) => {
 
   try {
     /* simulate API call */
-    await new Promise(res => setTimeout(res, 1500));
+   const session = JSON.parse(localStorage.getItem("citizenSession"));
+
+const res = await fetch("http://localhost:5000/api/feedback", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + session.token
+  },
+  body: JSON.stringify({
+    subject: subjectInput.value,
+    message: messageInput.value,
+    email: emailInput.value,
+    rating
+  })
+});
+
+const data = await res.json();
+
+if (!res.ok) {
+  throw new Error(data.message);
+}
+
 
     successBox.hidden = false;
     errorBox.hidden = true;

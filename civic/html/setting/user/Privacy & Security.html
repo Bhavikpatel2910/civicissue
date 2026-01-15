@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy & Security - UrbanFix</title>
+
+  <link rel="stylesheet" href="/civic/css/user/usersettings.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="logo"></span>
+      <h1>UrbanFix</h1>
+    </div>
+
+    <input class="search" placeholder="Search settings..." />
+
+    <nav class="nav">
+      <a href="#">Reports</a>
+      <a href="#">Dashboard</a>
+      <a href="#">Map</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn">🔔</button>
+      <div class="avatar"></div>
+    </div>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>Settings</h2>
+    <p class="muted">Manage your civic account</p>
+
+    <nav class="side-nav">
+      <a href="/civic/html/user/UserProfile.html">Profile</a>
+      <a href="/civic/html/user/notification.html">Notifications</a>
+      <a class="active" href="#">Privacy & Security</a>
+      <a href="#">Preferences</a>
+      <a href="/civic/html/user/CommunityPage.html">Linked Accounts</a>
+    </nav>
+
+    <a class="logout" href="#">Sign Out</a>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="content">
+
+    <header class="page-header">
+      <div>
+        <h2>Privacy & Security</h2>
+        <p>Manage your account security and data permissions.</p>
+      </div>
+      <button class="secondary small">Back to Dashboard</button>
+    </header>
+
+    <!-- AUTHENTICATION -->
+    <section class="section">
+      <h3>Authentication</h3>
+
+      <div class="card toggle-row">
+        <div>
+          <strong>Two-Factor Authentication</strong>
+          <p>Add a verification code at login.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span></span>
+        </label>
+      </div>
+
+      <div class="card">
+        <strong>Change Password</strong>
+
+        <div class="form-grid">
+          <input type="password" placeholder="Current password" />
+          <input type="password" placeholder="New password" />
+          <button class="primary align-right">Update Password</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIVACY -->
+    <section class="section">
+      <h3>Privacy Permissions</h3>
+
+      <div class="card toggle-row">
+        <div>
+          <strong>Real-time Location Tagging</strong>
+          <p>Attach GPS coordinates to reports.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span></span>
+        </label>
+      </div>
+
+      <div class="card toggle-row">
+        <div>
+          <strong>Anonymous Reporting</strong>
+          <p>Hide your name on public dashboards.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- SESSIONS -->
+    <section class="section">
+      <h3>Active Sessions</h3>
+
+      <div class="card session">
+        <div>
+          <strong>Chrome on macOS</strong>
+          <p>San Francisco • Current session</p>
+        </div>
+        <span class="badge success">Active</span>
+      </div>
+
+      <div class="card session">
+        <div>
+          <strong>iPhone 14 Pro</strong>
+          <p>San Francisco • 2 days ago</p>
+        </div>
+        <button class="link danger">Revoke</button>
+      </div>
+
+      <button class="link primary">Log out all other sessions</button>
+    </section>
+
+    <!-- DATA EXPORT -->
+    <section class="download">
+      <div class="download-icon">⬇</div>
+      <div>
+        <strong>Your Data, Your Control</strong>
+        <p>Export a full archive of your data.</p>
+      </div>
+      <button class="primary">Download My Data</button>
+    </section>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <p>© 2024 UrbanFix Inc. Built for better cities.</p>
+</footer>
+
+<script src="/civic/js/settings/user/Privacy & Security.js"></script>
+</body>
+</html>

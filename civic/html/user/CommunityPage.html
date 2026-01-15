@@ -5,106 +5,237 @@
   <title>Community Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- existing styles -->
-  <link rel="stylesheet" href="../css/UserDashboard.css">
+ <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
   <link rel="stylesheet" href="/civic/css/user/community.css">
 </head>
 
 <body>
 
-<header class="user-header">
-  <!-- your header here -->
+<!-- ================= TOP BAR ================= -->
+<header class="topbar">
+  <div class="topbar-inner">
+
+    <div class="brand">
+      <div class="brand-icon">
+        <span class="material-symbols-outlined">handshake</span>
+      </div>
+      <h2>CivicImpact</h2>
+    </div>
+
+    <nav class="main-nav">
+      <a class="active" href="#">Feed</a>
+      <a href="/civic/html/user/ReportIssue.html">Reports</a>
+      <a href="/civic/html/user/">Map</a>
+    </nav>
+
+    <div class="top-actions">
+      <div class="search-box">
+        <span class="material-symbols-outlined">search</span>
+        <input type="text" placeholder="Search neighborhood stories">
+      </div>
+      <button class="icon-btn">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <div class="avatar"></div>
+    </div>
+
+  </div>
 </header>
 
-<main class="dashboard-main">
+<!-- ================= LAYOUT ================= -->
+<main class="layout">
 
-  <div class="dashboard-heading">
-    <h1 class="community-title">Community Hub</h1>
-    <p class="community-sub">
-      Connect with your neighbors and see what's happening in Ahmedabad.
-      Together, we're making our city better one report at a time.
-    </p>
-  </div>
+  <!-- ========== LEFT SIDEBAR ========== -->
+  <aside class="sidebar">
+    <a class="side-link active">
+      <span class="material-symbols-outlined">home</span>
+      Home Feed
+    </a>
+    <a class="side-link">
+      <span class="material-symbols-outlined">location_on</span>
+      My Neighborhood
+    </a>
+    <a class="side-link">
+      <span class="material-symbols-outlined">auto_awesome</span>
+      Impact Map
+    </a>
+    <a class="side-link">
+      <span class="material-symbols-outlined">bookmark</span>
+      Saved Stories
+    </a>
+    <a class="side-link" href="/civic/html/setting/user/Neighborhood Settings.html" >
+      <span class="material-symbols-outlined">settings</span>
+      Settings
+    </a>
 
-  <!-- ⭐ COMMUNITY FEED -->
-  <section class="community-section">
+    <a class="report-btn" href="/civic/html/user/ReportIssue.html" >
+      <span class="material-symbols-outlined">add_circle</span>
+     Report Issue
+    </a>
 
-    <!-- COMMUNITY CARD 1 -->
-    <div class="community-card">
-      <div class="post-user">👤 Ravi Patel</div>
-      <p class="post-text">Large pothole repaired near Nehru Nagar.</p>
-
-      <div class="post-meta">
-        ❤️ 23 Likes &nbsp;&nbsp; 💬 5 Comments
+    <div class="impact-summary">
+      <p class="label">My Local Impact</p>
+      <div class="impact-count">
+        <strong>14</strong>
+        <span>Issues resolved this month</span>
+      </div>
+      <div class="progress">
+        <div class="progress-bar" style="width:70%"></div>
       </div>
     </div>
+  </aside>
 
-    <!-- COMMUNITY CARD 2 -->
-    <div class="community-card">
-      <div class="post-user">👤 Aisha Khan</div>
-      <p class="post-text">Streetlights fixed in Vastrapur. Thanks AMC!</p>
+  <!-- ========== FEED ========== -->
+  <section class="feed">
 
-      <div class="post-meta">
-        ❤️ 12 Likes &nbsp;&nbsp; 💬 2 Comments
-      </div>
+    <!-- Feed Tabs -->
+    <div class="feed-tabs">
+      <button class="active">Recent</button>
+      <button>Most Impactful</button>
+      <button>Following</button>
     </div>
 
-    <!-- COMMUNITY CARD 3 -->
-    <div class="community-card">
-      <div class="post-user">👤 Vivek Shah</div>
-      <p class="post-text">Garbage overflow reported and cleaned.</p>
+    <!-- ================= POST ================= -->
+    <article class="post">
 
-      <div class="post-meta">
-        ❤️ 40 Likes &nbsp;&nbsp; 💬 7 Comments
+      <header class="post-header">
+        <div class="user">
+          <div class="user-avatar"></div>
+          <div>
+            <div class="user-name">
+              Marcus Chen
+              <span class="badge">Top Reporter</span>
+            </div>
+            <p class="meta">Downtown • 2 hours ago</p>
+          </div>
+        </div>
+        <button class="icon-btn">
+          <span class="material-symbols-outlined">more_horiz</span>
+        </button>
+      </header>
+
+      <div class="post-body">
+        <h3>Finally fixed! Pothole on 5th Avenue</h3>
+        <p>
+          The massive crater near the elementary school has been completely
+          filled and leveled after community upvotes.
+        </p>
       </div>
-    </div>
+
+      <!-- Before / After -->
+      <div class="before-after">
+        <div class="after-img"></div>
+        <div class="before-img"></div>
+        <div class="slider-handle">
+          <span class="material-symbols-outlined">unfold_more</span>
+        </div>
+        <span class="label left">Reported</span>
+        <span class="label right">Resolved</span>
+      </div>
+
+      <!-- Reactions -->
+      <footer class="post-actions">
+        <div class="reactions">
+          <button>
+            <span class="material-symbols-outlined">thumb_up</span> 248
+          </button>
+          <button>
+            <span class="material-symbols-outlined">celebration</span> 56
+          </button>
+          <button>
+            <span class="material-symbols-outlined">chat_bubble</span> 12
+          </button>
+        </div>
+        <button class="share-btn">
+          <span class="material-symbols-outlined">share</span> Share
+        </button>
+      </footer>
+
+    </article>
 
   </section>
 
-  <footer class="footer" style="margin-top: 2rem; text-align: center; padding: 1rem;">
-    <p style="margin: 0; color: gray; font-size: 0.875rem;">
-      © 2024 CivicConnect Community. All rights reserved.
-    </p>
-  </footer>
+  <!-- ========== RIGHT SIDEBAR ========== -->
+  <aside class="rightbar">
+
+    <div class="card">
+      <h4>Trending Near You</h4>
+
+      <div class="trend">
+        <span class="tag urgent">Urgent</span>
+        <p>Broken traffic light on 10th Ave</p>
+        <small>42 neighbors upvoted</small>
+      </div>
+
+      <div class="trend">
+        <span class="tag event">Event</span>
+        <p>Westside Community Garden Cleanup</p>
+        <small>Saturday • 9:00 AM</small>
+      </div>
+
+      <button class="view-all">View All Trending</button>
+    </div>
+
+    <div class="card">
+      <h4>Impact Heroes</h4>
+
+      <div class="hero">
+        <span>David S.</span>
+        <strong>1.2k pts</strong>
+      </div>
+      <div class="hero">
+        <span>Sarah K.</span>
+        <strong>940 pts</strong>
+      </div>
+      <div class="hero">
+        <span>Amelia J.</span>
+        <strong>820 pts</strong>
+      </div>
+    </div>
+
+    <div class="map-preview">
+      <span>View Impact Map</span>
+    </div>
+
+  </aside>
 
 </main>
 
-<!-- OPTIONAL: JS FILE (NOT USED HERE) -->
-<!-- <script src="../js/community.js"></script> -->
+<!-- ================= MOBILE NAV ================= -->
+<nav class="mobile-nav">
+  <button class="active">
+    <span class="material-symbols-outlined">home</span>
+    Home
+  </button>
+  <button>
+    <span class="material-symbols-outlined">explore</span>
+    Explore
+  </button>
+  <button class="fab">
+    <span class="material-symbols-outlined">add</span>
+  </button>
+  <button>
+    <span class="material-symbols-outlined">map</span>
+    Map
+  </button>
+  <button>
+    <span class="material-symbols-outlined">person</span>
+    Profile
+  </button>
+</nav>
 
-<style>
-/* skeleton (optional static placeholder) */
-.skeleton-card{
-  width:100%;
-  height:120px;
-  background:#eee;
-  border-radius:10px;
-  margin-bottom:12px;
-}
 
-/* card */
-.community-card{
-  background:white;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:12px;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
 
-.post-user{
-  font-weight:600;
-  margin-bottom:6px;
-}
+<script src="/civic/js/user/CommunityPage.js"></script>
 
-.post-text{
-  margin:6px 0;
-}
 
-.post-meta{
-  color:gray;
-  font-size:.9rem;
-}
-</style>
 
 </body>
 </html>

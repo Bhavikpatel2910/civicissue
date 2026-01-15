@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Citizen Account Settings - UrbanConnect</title>
+
+  <link rel="stylesheet" href="/civic/css/user/usersettings.css" />
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="logo">⬛</span>
+      <h1>UrbanConnect</h1>
+    </div>
+
+    <nav class="nav">
+      <a href="#">Dashboard</a>
+      <a href="#">Map</a>
+      <a href="#">Reports</a>
+      <a href="#">Community</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn">🔔</button>
+      <button class="icon-btn">❓</button>
+      <div class="avatar"></div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>Citizen Account</h2>
+    <p class="muted">Manage your civic profile</p>
+
+    <nav class="side-nav">
+      <a href="/civic/html/setting/user/account setting.html">Account Details</a>
+      <a class="active" href="#">Notification Preferences</a>
+      <a href="/civic/html/setting/user/Privacy & Security.html">Privacy & Security</a>
+      <a href="/civic/html/setting/user/Neighborhood Settings.html">Neighborhood Settings</a>
+    </nav>
+
+    <button class="logout">Sign Out</button>
+  </aside>
+
+  <!-- CONTENT -->
+  <section class="content">
+
+    <header class="page-header">
+      <h2>Notification Preferences</h2>
+      <p>Customize how and when you receive updates.</p>
+    </header>
+
+    <!-- ALERT CONTROLS -->
+    <section class="card">
+      <h3>Alert Controls</h3>
+
+      <div class="toggle-row">
+        <div>
+          <strong>Report Status Changes</strong>
+          <p>Get notified when your report status changes.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <strong>Nearby Issue Alerts</strong>
+          <p>Alerts for new issues near your location.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <strong>Monthly Impact Summary</strong>
+          <p>Monthly report of your civic impact.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- NEIGHBORHOOD -->
+    <section class="card">
+      <h3>Neighborhood Settings</h3>
+
+      <label class="field">
+        <span>Primary Neighborhood</span>
+        <select>
+          <option>Downtown</option>
+          <option>Brooklyn Heights</option>
+          <option>West Village</option>
+          <option selected>Lincoln Park</option>
+        </select>
+      </label>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <strong>Interest Radius</strong>
+          <span id="radiusValue">1.5 km</span>
+        </div>
+        <input id="radiusSlider" type="range" min="500" max="5000" step="500" value="1500" />
+      </div>
+
+      <div class="map-preview">
+        <span>Map Preview</span>
+        <button>Adjust on Map</button>
+      </div>
+    </section>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="secondary">Discard Changes</button>
+      <button class="primary">Save Changes</button>
+    </div>
+
+  </section>
+</main>
+
+<script src="/civic/js/settings/user/Settings.js"></script>
+</body>
+</html>

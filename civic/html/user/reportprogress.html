@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Progress & Timeline - CityFix</title>
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="/civic/css/user/reportprogress.css">
+</head>
+
+<body class="light">
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="logo"></div>
+      <h1>CityFix</h1>
+    </div>
+
+    <nav class="nav">
+      <a href="#">Dashboard</a>
+      <a class="active" href="#">My Reports</a>
+      <a href="#">Map</a>
+      <a href="#">Contact</a>
+    </nav>
+
+    <div class="header-right">
+      <input class="search" type="text" placeholder="Search reports..." />
+      <div class="avatar"></div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="container">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="#">Home</a>
+    <span>/</span>
+    <a href="#">My Reports</a>
+    <span>/</span>
+    <strong>Report #84291</strong>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <section class="page-header">
+    <div>
+      <h2>Pothole Repair – Main St.</h2>
+      <p>Report ID: #84291 • Submitted on Oct 12, 2023 • 124 Main Street</p>
+    </div>
+
+    <button class="primary-btn">Contact Department</button>
+  </section>
+
+  <!-- CONTENT GRID -->
+  <div class="grid">
+
+    <!-- LEFT -->
+    <section class="left">
+      <div class="card">
+        <h3>Submitted Photo</h3>
+        <img src="https://picsum.photos/800/400" alt="Pothole">
+        <p class="caption">
+          “Large pothole near the intersection. Cars are swerving to avoid it.”
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Location</h3>
+        <img src="https://picsum.photos/800/300" alt="Map">
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <section class="right">
+
+      <div class="tabs">
+        <button class="tab active">Timeline</button>
+        <button class="tab">Messages</button>
+        <button class="tab">Details</button>
+      </div>
+
+      <div class="timeline">
+
+        <div class="timeline-item inactive">
+          <span class="dot"></span>
+          <div>
+            <h4>Issue Resolved</h4>
+            <p>Estimated completion: Oct 18, 2023</p>
+          </div>
+        </div>
+
+        <div class="timeline-item active">
+          <span class="dot"></span>
+          <div>
+            <h4>In Progress</h4>
+            <p>Oct 14, 2023 • 09:15 AM</p>
+            <div class="note">
+              Maintenance crew dispatched. Surface preparation in progress.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="dot"></span>
+          <div>
+            <h4>Assigned</h4>
+            <p>Oct 13, 2023 • 02:45 PM</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="dot"></span>
+          <div>
+            <h4>Report Received</h4>
+            <p>Oct 12, 2023 • 10:24 AM</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card message">
+        <h3>Recent Message</h3>
+        <p><strong>Public Works Dept.</strong> — 2 hours ago</p>
+        <p>
+          “We’ve scheduled the asphalt crew for this afternoon. Site should be
+          cleared by 5 PM.”
+        </p>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  © 2023 City Government Urban Maintenance
+</footer>
+
+<script src="/civic/js/user/reportprogress.js"></script>
+</body>
+</html>

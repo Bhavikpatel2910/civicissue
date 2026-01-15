@@ -1,43 +1,74 @@
-/* ----------------- LOGOUT ----------------- */
-document.getElementById("logoutBtn").onclick = () => {
-  localStorage.clear();
-  window.location.href = "/login";
-};
+const API = "http://localhost:5000/api/community";
 
-/* ----------------- SAMPLE COMMUNITY DATA ----------------- */
-const sampleCommunity = [
-  { user: "Ravi Patel", text: "Large pothole repaired near Nehru Nagar.", likes: 23, comments: 5 },
-  { user: "Aisha Khan", text: "Streetlights fixed in Vastrapur. Thanks AMC!", likes: 12, comments: 2 },
-  { user: "Vivek Shah", text: "Garbage overflow reported and cleaned.", likes: 40, comments: 7 }
-];
-
-/* ----------------- RENDER FEED ----------------- */
-function loadCommunityFeed() {
-
-  const container = document.getElementById("communityFeed");
-  const skeleton = document.getElementById("skeletonContainer");
-
-  // simulate API delay
-  setTimeout(() => {
-
-    skeleton.style.display = "none";
-
-    sampleCommunity.forEach(post => {
-      const card = document.createElement("div");
-      card.className = "community-card";
-
-      card.innerHTML = `
-        <div class="post-user">👤 ${post.user}</div>
-        <p class="post-text">${post.text}</p>
-        <div class="post-meta">
-          👍 ${post.likes} &nbsp;&nbsp; 💬 ${post.comments}
-        </div>
-      `;
-
-      container.appendChild(card);
-    });
-
-  }, 1500);
+const session = JSON.parse(localStorage.getItem("session"));
+if (!session || !session.token) {
+  window.location.href = "/civic/html/auth/Login.html";
 }
 
-loadCommunityFeed();
+const feed = document.querySelector(".feed");
+const avatar = document.querySelector(".avatar");
+
+avatar.onclick = () => {
+  localStorage.removeItem("session");
+  window.location.href = "/civic/html/auth/Login.html";
+};
+
+async function loadFeed() {
+  const res = await fetch(API, {
+    headers: {
+      Authorization: "Bearer " + session.token
+    }
+  });
+
+  const posts = await res.json();
+  renderFeed(posts);
+}
+
+function renderFeed(posts) {
+  feed.innerHTML = "";
+
+  posts.forEach(p => {
+    const el = document.createElement("article");
+    el.className = "post";
+
+    el.innerHTML = `
+      <header class="post-header">
+        <div class="user">
+          <div class="user-avatar"></div>
+          <div>
+            <div class="user-name">${p.userName}</div>
+            <p class="meta">${p.location}</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="post-body">
+        <h3>${p.title}</h3>
+        <p>${p.description}</p>
+      </div>
+
+      <div class="before-after">
+        ${p.beforeImage ? `<img src="http://localhost:5000/uploads/${p.beforeImage}">` : ""}
+      </div>
+
+      <footer class="post-actions">
+        <button onclick="likePost('${p._id}')">👍 ${p.likes}</button>
+      </footer>
+    `;
+
+    feed.appendChild(el);
+  });
+}
+
+async function likePost(id) {
+  await fetch(API + "/like/" + id, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + session.token
+    }
+  });
+
+  loadFeed();
+}
+
+loadFeed();

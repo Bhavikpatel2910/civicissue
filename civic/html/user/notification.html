@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notification History – Civic Reporter</title>
+
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="/civic/css/user/notification.css" />
+  
+
+  <!-- Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <strong>Civic Reporter</strong>
+    <nav class="nav">
+      <a href="/civic/html/user/UserDashboard.html">Dashboard</a>
+      <a href="/civic/html/user/ReportIssue.html" class="active">Reports</a>
+      <a href="/civic/html/user/">Map</a>
+      <a href="/civic/html/user/reportprogress.html">Impact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- CONTENT -->
+<main class="settings-layout">
+
+  <!-- LEFT (empty for alignment consistency) -->
+  <aside class="settings-sidebar">
+    <h2>Notifications</h2>
+    <p>History & alerts</p>
+
+    <nav class="settings-nav">
+      <a href="#" class="active">All</a>
+      <a href="#">Unread</a>
+      <a href="#">Rewards</a>
+    </nav>
+  </aside>
+
+  <!-- RIGHT -->
+  <section class="settings-content">
+
+    <div class="page-header">
+      <h1>Notification History</h1>
+      <p>Updates on your reports and community activity.</p>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn btn-secondary" id="markAllRead">
+        Mark all as read
+      </button>
+    </div>
+
+    <!-- TODAY -->
+    <div class="card">
+      <h4 class="section-title">Today</h4>
+
+      <div class="notification unread success">
+        <span class="material-symbols-outlined">check_circle</span>
+        <div>
+          <strong>Street Light Repaired</strong>
+          <p>Your report on Oak Street has been resolved.</p>
+          <small>10:45 AM</small>
+        </div>
+      </div>
+
+      <div class="notification unread info">
+        <span class="material-symbols-outlined">location_on</span>
+        <div>
+          <strong>New Pothole Nearby</strong>
+          <p>A pothole was reported 200m from your location.</p>
+          <small>08:12 AM</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- YESTERDAY -->
+    <div class="card">
+      <h4 class="section-title">Yesterday</h4>
+
+      <div class="notification reward">
+        <span class="material-symbols-outlined">military_tech</span>
+        <div>
+          <strong>Community Hero Badge</strong>
+          <p>You earned 50 impact points.</p>
+          <small>4:30 PM</small>
+        </div>
+      </div>
+
+      <div class="notification">
+        <span class="material-symbols-outlined">water_drop</span>
+        <div>
+          <strong>Scheduled Maintenance</strong>
+          <p>Water maintenance on Friday, 10 AM – 2 PM.</p>
+          <small>9:00 AM</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOAD MORE -->
+    <div class="actions">
+      <button class="btn btn-secondary">
+        Load more history
+      </button>
+    </div>
+
+  </section>
+</main>
+
+<script src="/civic/js/user/notification.js"></script>
+</body>
+</html>

@@ -189,3 +189,22 @@ setInterval(() => {
   render();
   checkSLABreaches();
 }, 20000);
+
+function updateReport(reportId, status, note) {
+  fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status, note })
+  })
+  .then(res => res.json())
+  .then(() => alert("Status updated"));
+}
+
+fetch("http://localhost:5000/api/reports")
+.then(r=>r.json())
+.then(reports=>{
+  reports.forEach(r=>{
+    console.log(r.title, r.status, r.department);
+  });
+});
+

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Share Your Impact | CityFix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/civic/css/user/ShareImpact.css">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="topbar">
+  <div class="topbar-inner">
+
+    <div class="brand">
+      <div class="logo"></div>
+      <h2>CityFix</h2>
+    </div>
+
+    <nav>
+      <a href="#">Dashboard</a>
+      <a href="#">My Reports</a>
+      <a href="#">Map</a>
+      <a href="#">Community</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <div class="avatar"></div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="container">
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs">
+    <a href="#">My Reports</a>
+    <span>/</span>
+    <a href="#">Oak Street Pothole Repair</a>
+    <span>/</span>
+    <strong>Share Impact</strong>
+  </div>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <h1>Share Your Impact</h1>
+    <p>Celebrate your contribution by sharing this achievement.</p>
+  </section>
+
+  <section class="grid">
+
+    <!-- ========== LEFT : PREVIEW ========== -->
+    <div class="preview-column">
+      <div class="preview-box">
+
+        <h3>Live Preview</h3>
+
+        <!-- Impact Card -->
+        <div class="impact-card square" id="impactCard">
+
+          <div class="card-bg"></div>
+
+          <div class="card-overlay">
+
+            <div class="card-top">
+              <span class="badge">
+                <span class="material-symbols-outlined">verified</span>
+                Reported By Me
+              </span>
+              <div class="mini-logo">CF</div>
+            </div>
+
+            <div class="card-content">
+              <span class="tag">Community Hero</span>
+              <h2 id="headlineText">I just helped improve Oak Street!</h2>
+              <p>Join me in making our city better.</p>
+
+              <div class="location">
+                <span class="material-symbols-outlined">location_on</span>
+                Oak Street, City Center
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="preview-actions">
+          <button id="saveImage">
+            <span class="material-symbols-outlined">download</span>
+            Save Image
+          </button>
+          <button id="copyLink">
+            <span class="material-symbols-outlined">link</span>
+            Copy Link
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== RIGHT : CONTROLS ========== -->
+    <div class="control-column">
+
+      <!-- Customize Panel -->
+      <div class="panel">
+        <h3>Customize</h3>
+
+        <div class="group">
+          <label>Aspect Ratio</label>
+          <div class="ratio-options">
+            <button id="ratioSquare" class="active">1:1 Square</button>
+            <button id="ratioStory">9:16 Story</button>
+          </div>
+        </div>
+
+        <div class="group">
+          <label>Headline Text</label>
+          <textarea id="headlineInput" rows="2">
+I just helped improve Oak Street! Join me in making our city better.
+          </textarea>
+        </div>
+      </div>
+
+      <!-- Share Panel -->
+      <div class="panel">
+        <h3>Share to Feed</h3>
+
+        <button class="share facebook">Facebook</button>
+        <button class="share whatsapp">WhatsApp</button>
+        <button class="share twitter">Twitter / X</button>
+      </div>
+
+      <!-- Rewards -->
+      <div class="reward-note">
+        <span class="material-symbols-outlined">stars</span>
+        <p>
+          Sharing earns <strong>+50 Karma Points</strong> and a
+          <strong>Community Champion</strong> badge.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <p>© 2024 CityFix · Urban Maintenance & Civic Pride</p>
+</footer>
+
+<!-- Hidden Canvas for Export -->
+<canvas id="exportCanvas" hidden></canvas>
+
+<!-- JS -->
+<script src="/civic/js/user/ShareImpact.js"></script>
+</body>
+</html>

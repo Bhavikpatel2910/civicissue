@@ -1,0 +1,261 @@
+/* ===============================
+   RESET + VARIABLES
+   =============================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --primary: #135bec;
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --text: #111318;
+  --muted: #6b7280;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===============================
+   HEADER
+   =============================== */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.nav a {
+  margin: 0 12px;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.nav a.active {
+  color: var(--primary);
+}
+
+.nav a:hover {
+  color: var(--primary);
+}
+
+/* ===============================
+   LAYOUT
+   =============================== */
+
+.settings-layout {
+  max-width: 1200px;
+  margin: auto;
+  padding: 32px 20px;
+  display: flex;
+  gap: 32px;
+}
+
+/* Sidebar */
+.settings-sidebar {
+  width: 260px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.settings-sidebar h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.settings-sidebar p {
+  margin: 6px 0 16px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.settings-nav a {
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.settings-nav a.active {
+  background: rgba(19, 91, 236, 0.1);
+  color: var(--primary);
+}
+
+/* Content */
+.settings-content {
+  flex: 1;
+}
+
+/* ===============================
+   COMMON UI
+   =============================== */
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.page-header p {
+  margin-top: 6px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 10px;
+}
+
+.btn.secondary {
+  background: #f3f4f6;
+  border: 1px solid var(--border);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+/* ===============================
+   NOTIFICATIONS
+   =============================== */
+
+.notification {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--card);
+  margin-bottom: 12px;
+}
+
+.notification span {
+  font-size: 28px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.notification strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.notification p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.notification small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* States */
+.notification.unread {
+  background: rgba(19, 91, 236, 0.05);
+  border-color: rgba(19, 91, 236, 0.4);
+}
+
+.notification.success span {
+  color: #22c55e;
+}
+
+.notification.info span {
+  color: #3b82f6;
+}
+
+.notification.reward span {
+  color: #eab308;
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+
+@media (max-width: 900px) {
+  .settings-layout {
+    flex-direction: column;
+  }
+
+  .settings-sidebar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-header h1 {
+    font-size: 26px;
+  }
+
+  .nav {
+    display: none;
+  }
+}
