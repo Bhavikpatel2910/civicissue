@@ -1,22 +1,41 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const issueSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  imageUrl: String,
-  latitude: Number,
-  longitude: Number,
-  category: String, // pothole, garbage, light etc
-  status: {
-    type: String,
-    default: "Pending",
-    enum: ["Pending", "In Progress", "Resolved"]
+const issueSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    description: String,
+
+    status: {
+      type: String,
+      enum: ["New", "In Progress", "Resolved", "Closed"],
+      default: "New"
+    },
+
+    priority: {
+      type: String,
+      enum: ["Low", "Medium", "High", "Emergency"],
+      default: "Medium"
+    },
+
+    crew: {
+      type: String,
+      default: ""
+    },
+
+    location: {
+      lat: Number,
+      lng: Number,
+      address: String
+    },
+
+    activityLog: [
+      {
+        message: String,
+        createdAt: { type: Date, default: Date.now }
+      }
+    ]
   },
-  reportedBy: String,
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("Issue", issueSchema);
+export default mongoose.model("Issue", issueSchema);

@@ -1,52 +1,40 @@
 import mongoose from "mongoose";
 
-const reportSchema = new mongoose.Schema({
-  reportId: {
-    type: String,
-    unique: true
+const reportSchema = new mongoose.Schema(
+  {
+    reportId: {
+      type: String,
+      unique: true
+    },
+
+    title: {
+      type: String,
+      required: true
+    },
+
+    category: {
+      type: String,
+      required: true
+    },
+
+    location: {
+      type: String,
+      required: true
+    },
+
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "low"
+    },
+
+    status: {
+      type: String,
+      enum: ["new", "in-progress", "resolved"],
+      default: "new"
+    }
   },
-
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
-  },
-
-  title: {
-    type: String,
-    required: true
-  },
-
-  description: String,
-
-  category: {
-    type: String,
-    required: true
-  },
-
-  status: {
-    type: String,
-    enum: ["Submitted", "In Progress", "Resolved"],
-    default: "Submitted"
-  },
-
-  media: [String],
-
-  location: String,
-
-  /* ✅ ADD THIS */
-  latitude: Number,
-  longitude: Number,
-
-  likes: {
-    type: Number,
-    default: 0
-  },
-
-  celebrates: {
-    type: Number,
-    default: 0
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 
 export default mongoose.model("Report", reportSchema);
