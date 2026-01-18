@@ -1,121 +1,250 @@
 /* =====================================================
-   ADMIN MAP – SMART CITY (LEAFLET)
-   ===================================================== */
+   ADMIN MAP – SMART CITY (LEAFLET | AUTO REFRESH | FIXED)
+===================================================== */
 
-/* ---------- MAP INITIALIZATION ---------- */
-const map = L.map("map").setView([22.9734, 78.6569], 5); // India center
+document.addEventListener("DOMContentLoaded", () => {
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: "© OpenStreetMap contributors"
-}).addTo(map);
+  /* ===============================
+     AUTH CHECK (SAFE & STRICT)
+  =============================== */
+  let session = null;
 
-/* ---------- ISSUE DATA (DUMMY / API READY) ---------- */
-const issues = [
-  {
-    id: 1,
-    title: "Water Pipeline Burst",
-    description: "Heavy leakage reported near main road",
-    status: "critical",
-    location: "Delhi – Sector 12",
-    coords: [28.6139, 77.2090]
-  },
-  {
-    id: 2,
-    title: "Garbage Overflow",
-    description: "Bins overflowing for 2 days",
-    status: "warning",
-    location: "Mumbai – Andheri",
-    coords: [19.0760, 72.8777]
-  },
-  {
-    id: 3,
-    title: "Street Light Not Working",
-    description: "Dark zone reported by citizens",
-    status: "info",
-    location: "Bengaluru – Whitefield",
-    coords: [12.9716, 77.5946]
-  },
-  {
-    id: 4,
-    title: "Road Cave-In",
-    description: "Road partially collapsed",
-    status: "critical",
-    location: "Ahmedabad – SG Highway",
-    coords: [23.0225, 72.5714]
+  try {
+    session = JSON.parse(localStorage.getItem("citizenSession"));
+  } catch {
+    session = null;
   }
-];
 
-/* ---------- STATUS COLORS ---------- */
-const statusColor = {
-  critical: "#e53935",
-  warning: "#fb8c00",
-  info: "#1e88e5"
-};
+  if (!session || session.role !== "admin" || !session.token) {
+    localStorage.removeItem("citizenSession");
+    window.location.replace("/civic/html/auth/adminLogin.html");
+    return;
+  }
 
-/* ---------- MARKER STORAGE ---------- */
-const markers = [];
+  const TOKEN = session.token;
+  const API_BASE = "http://localhost:5000/api/admin";
 
-/* ---------- CREATE MARKERS ---------- */
-issues.forEach(issue => {
-  const marker = L.circleMarker(issue.coords, {
-    radius: 9,
-    color: statusColor[issue.status],
-    fillColor: statusColor[issue.status],
-    fillOpacity: 0.85
+  /* ===============================
+     MAP INITIALIZATION
+  =============================== */
+  if (!window.L) {
+    alert("Map library failed to load");
+    return;
+  }
+
+  const map = L.map("map", {
+    zoomControl: true,
+    attributionControl: true
+  }).setView([22.9734, 78.6569], 5); // India
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "© OpenStreetMap contributors"
   }).addTo(map);
 
-  marker.bindPopup(`
-    <div style="min-width:220px">
-      <h3 style="margin:0;color:${statusColor[issue.status]}">
-        ${issue.title}
-      </h3>
-      <p>${issue.description}</p>
-      <strong>📍 ${issue.location}</strong><br>
-      <small>Status: ${issue.status.toUpperCase()}</small>
-      <hr>
-      <button onclick="assignCrew(${issue.id})">🚑 Assign Crew</button>
-      <button onclick="resolveIssue(${issue.id})">✅ Mark Resolved</button>
-    </div>
-  `);
+  /* ===============================
+     STATUS COLORS
+  =============================== */
+  const STATUS_COLOR = {
+    critical: "#e53935",
+    warning: "#fb8c00",
+    info: "#1e88e5",
+    resolved: "#43a047"
+  };
 
-  markers.push(marker);
-});
+  /* ===============================
+     MARKER LAYER
+  =============================== */
+  const markerLayer = L.layerGroup().addTo(map);
 
-/* ---------- ADMIN ACTIONS ---------- */
-window.assignCrew = function (id) {
-  alert(`🚧 Crew assigned to issue ID: ${id}`);
-};
+  /* ===============================
+     LOAD ISSUES
+  =============================== */
+  async function loadIssues() {
+    try {
+      const res = await fetch(`${API_BASE}/issues/map`, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`
+        }
+      });
 
-window.resolveIssue = function (id) {
-  alert(`✅ Issue ID ${id} marked as resolved`);
-};
+      if (res.status === 401 || res.status === 403) {
+        forceLogout();
+        return;
+      }
 
-/* ---------- LIVE ISSUE SIMULATION ---------- */
-setInterval(() => {
-  const random = issues[Math.floor(Math.random() * issues.length)];
-  const pulse = L.circle(random.coords, {
-    radius: 200,
-    color: statusColor[random.status],
-    fillOpacity: 0.2
-  }).addTo(map);
+      if (!res.ok) throw new Error("Map API failed");
 
-  setTimeout(() => map.removeLayer(pulse), 1500);
-}, 4000);
+      const issues = await res.json();
+      renderMarkers(Array.isArray(issues) ? issues : []);
 
-/* ---------- GEOLOCATION (ADMIN VIEW) ---------- */
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(pos => {
-    const adminLocation = [pos.coords.latitude, pos.coords.longitude];
+    } catch (err) {
+      console.error("MAP LOAD ERROR:", err.message);
+    }
+  }
 
-    L.marker(adminLocation)
-      .addTo(map)
-      .bindPopup("🧑‍💼 You (Admin)")
-      .openPopup();
+  /* ===============================
+     RENDER MARKERS
+  =============================== */
+  function renderMarkers(issues) {
+    markerLayer.clearLayers();
 
-    map.setView(adminLocation, 10);
+    issues.forEach(issue => {
+      const lat = issue.latitude ?? issue.lat;
+      const lng = issue.longitude ?? issue.lng;
+      if (!lat || !lng) return;
+
+      const status = (issue.status || "info").toLowerCase();
+      const color = STATUS_COLOR[status] || STATUS_COLOR.info;
+
+      const marker = L.circleMarker([lat, lng], {
+        radius: 9,
+        color,
+        fillColor: color,
+        fillOpacity: 0.85
+      });
+
+      marker.bindPopup(buildPopup(issue, color));
+      marker.addTo(markerLayer);
+    });
+  }
+
+  /* ===============================
+     POPUP TEMPLATE
+  =============================== */
+  function buildPopup(issue, color) {
+    return `
+      <div style="min-width:220px">
+        <h3 style="margin:0;color:${color}">
+          ${issue.title || "Reported Issue"}
+        </h3>
+        <p>${issue.description || ""}</p>
+        <strong>${issue.location || "Unknown"}</strong><br>
+        <small>Status: ${(issue.status || "info").toUpperCase()}</small>
+        <hr>
+        <button onclick="window.__assignCrew('${issue._id}')">🚧 Assign Crew</button>
+        <button onclick="window.__resolveIssue('${issue._id}')">Resolve</button>
+      </div>
+    `;
+  }
+
+  /* ===============================
+     ADMIN ACTIONS (GLOBAL SAFE)
+  =============================== */
+  window.__assignCrew = async (id) => {
+    try {
+      const crew = prompt("Enter crew name:");
+      if (!crew) return;
+
+      const res = await fetch(`${API_BASE}/issues/${id}/assign`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${TOKEN}`
+        },
+        body: JSON.stringify({ crew })
+      });
+
+      if (!res.ok) throw new Error();
+      alert("Crew assigned");
+      loadIssues();
+
+    } catch {
+      alert("Failed to assign crew");
+    }
+  };
+
+  window.__resolveIssue = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE}/issues/${id}/resolve`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${TOKEN}`
+        }
+      });
+
+      if (!res.ok) throw new Error();
+      alert("Issue resolved");
+      loadIssues();
+
+    } catch {
+      alert("Failed to resolve issue");
+    }
+  };
+
+  /* ===============================
+     ADMIN GEOLOCATION
+  =============================== */
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const loc = [pos.coords.latitude, pos.coords.longitude];
+
+        L.marker(loc)
+          .addTo(map)
+          .bindPopup("🧑‍💼 You (Admin)")
+          .openPopup();
+
+        map.setView(loc, 10);
+      },
+      () => console.warn("Admin location denied")
+    );
+  }
+
+  /* ===============================
+     LIVE PULSE EFFECT
+  =============================== */
+  setInterval(() => {
+    const layers = markerLayer.getLayers();
+    if (!layers.length) return;
+
+    const random = layers[Math.floor(Math.random() * layers.length)];
+    const latlng = random.getLatLng();
+
+    const pulse = L.circle(latlng, {
+      radius: 250,
+      color: "#999",
+      fillOpacity: 0.2
+    }).addTo(map);
+
+    setTimeout(() => map.removeLayer(pulse), 1200);
+  }, 5000);
+
+  /* ===============================
+     AUTO REFRESH (30s)
+  =============================== */
+  const REFRESH_INTERVAL = 30000;
+  let refreshTimer = null;
+
+  function startAutoRefresh() {
+    loadIssues();
+    refreshTimer = setInterval(loadIssues, REFRESH_INTERVAL);
+    console.log("🟢 Map auto-refresh enabled (30s)");
+  }
+
+  function stopAutoRefresh() {
+    if (refreshTimer) {
+      clearInterval(refreshTimer);
+      refreshTimer = null;
+    }
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    document.hidden ? stopAutoRefresh() : startAutoRefresh();
   });
-}
 
-/* ---------- CONSOLE CONFIRM ---------- */
-console.log("✅ Admin Smart City Map Loaded Successfully");
+  /* ===============================
+     FORCE LOGOUT
+  =============================== */
+  function forceLogout() {
+    localStorage.removeItem("citizenSession");
+    window.location.replace("/civic/html/auth/adminLogin.html");
+  }
+
+  /* ===============================
+     INIT
+  =============================== */
+  startAutoRefresh();
+  console.log("Admin Smart City Map Loaded (Auto-refresh ON)");
+
+});

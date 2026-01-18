@@ -14,8 +14,7 @@ const submitBtn = document.getElementById("submitBtn");
 const spinner = submitBtn.querySelector(".spinner");
 const btnText = submitBtn.querySelector(".btn-text");
 
-// Base path for Live Server
-
+const API_BASE = "http://localhost:5000/api/auth";
 
 // ============================
 // ROLE SWITCH
@@ -39,8 +38,10 @@ roleButtons.forEach(btn => {
 // PASSWORD TOGGLE
 // ============================
 togglePassword.addEventListener("click", () => {
-  passwordInput.type = passwordInput.type === "password" ? "text" : "password";
-  togglePassword.textContent = passwordInput.type === "password" ? "👁" : "🙈";
+  passwordInput.type =
+    passwordInput.type === "password" ? "text" : "password";
+  togglePassword.textContent =
+    passwordInput.type === "password" ? "👁" : "🙈";
 });
 
 // ============================
@@ -84,18 +85,17 @@ form.addEventListener("submit", async e => {
   }
 
   submitBtn.disabled = true;
-  if (spinner) spinner.classList.remove("hidden");
-  if (btnText) btnText.textContent = "Creating Account...";
+  spinner.classList.remove("hidden");
+  btnText.textContent = "Creating Account...";
 
   try {
-    const res = await fetch("http://localhost:5000/api/register", {
+    const res = await fetch(`${API_BASE}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
         email,
-        password,
-        role: "User"
+        password
       })
     });
 
@@ -106,19 +106,17 @@ form.addEventListener("submit", async e => {
       return;
     }
 
-    // Save email for login autofill
     localStorage.setItem("lastRegisteredEmail", email);
-
     alert("Account created successfully!");
 
-    // Redirect to Login
-   window.location.href = "/civic/html/auth/LoginPage.html";
+    //  redirect to LOGIN (index.html)
+    window.location.href = "/civic/html/auth/index.html";
 
   } catch (err) {
     alert("Server not reachable");
   } finally {
     submitBtn.disabled = false;
-    if (spinner) spinner.classList.add("hidden");
-    if (btnText) btnText.textContent = "Create Account";
+    spinner.classList.add("hidden");
+    btnText.textContent = "Create Account";
   }
 });

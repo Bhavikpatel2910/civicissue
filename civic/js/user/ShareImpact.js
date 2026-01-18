@@ -87,7 +87,7 @@ saveBtn.onclick = async () => {
 
     // Location
     ctx.font = "600 28px Plus Jakarta Sans";
-    ctx.fillText("📍 Oak Street, City Center", 80, height - 130);
+    ctx.fillText(" Oak Street, City Center", 80, height - 130);
 
     // WATERMARK
     drawWatermark(width, height);

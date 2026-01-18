@@ -30,7 +30,7 @@
   <p class="subtitle">Onboard new employees into the municipal system.</p>
 
   <!-- STEP 1 -->
-  <div class="card step" data-step="1">
+  <div class="card step">
     <h3>Basic Information</h3>
 
     <label>
@@ -56,9 +56,10 @@
   </div>
 
   <!-- STEP 2 -->
-  <div class="card step" data-step="2">
+  <div class="card step">
     <h3>Department</h3>
     <select id="departmentSelect">
+      <option value="">Select Department</option>
       <option value="PW">Public Works</option>
       <option value="PR">Parks & Recreation</option>
       <option value="TR">Transportation</option>
@@ -67,7 +68,7 @@
   </div>
 
   <!-- STEP 3 -->
-  <div class="card step" data-step="3">
+  <div class="card step">
     <h3>Permissions</h3>
     <p>Permissions auto-assigned by role.</p>
   </div>
@@ -84,21 +85,16 @@
   <h3>Badge Preview</h3>
 
   <div class="preview-box">
-
     <img id="photoPreview" class="photo" src="" alt="Photo">
-
     <strong id="previewName">—</strong>
     <span id="previewEmpId">—</span>
-
     <div id="qrCode"></div>
-    <svg id="barcode"></svg>
 
     <div class="qr-actions">
       <button id="downloadPNG">PNG</button>
       <button id="downloadPDF">PDF</button>
       <button id="printBadge">Print</button>
     </div>
-
   </div>
 </aside>
 
@@ -106,9 +102,6 @@
 
 <div id="toastContainer"></div>
 
-
-<!-- JS -->
 <script src="/civic/js/admin/invite-staff.js"></script>
-
 </body>
 </html>

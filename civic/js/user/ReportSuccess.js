@@ -2,7 +2,7 @@
    CityFix – Report Success Logic
 ================================ */
 
-// 1️⃣ Load session
+// 1 Load session
 const session = JSON.parse(localStorage.getItem("citizenSession"));
 const lastReport = JSON.parse(localStorage.getItem("lastSubmittedReport"));
 

@@ -5,57 +5,46 @@
   <title>Admin Settings – Smart City</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <title>AdminSettings</title>
-
-
   <link rel="stylesheet" href="/civic/css/admin/adminSettings.css">
-
 </head>
 
 <body>
 
-  <!-- Converted from AdminSettings.jsx -->
-  <h1>AdminSettings</h1>
-  <p>Static HTML placeholder for admin settings.</p>
-  <p>See <a href="index.html">Index</a>.</p>        
+  <div class="settings-card">
+    <h2>⚙️ Admin Settings</h2>
 
+    <label>Name</label>
+    <input id="name" type="text" />
 
-<script src="../../js/admin/adminsettings.js"></script>
+    <label>Email</label>
+    <input id="email" type="email" />
 
-<div class="settings-card">
-  <h2>⚙️ Admin Settings</h2>
+    <label>Department</label>
+    <input id="department" type="text" />
 
-  <label>Name</label>
-  <input id="name">
+    <label>Language</label>
+    <select id="language">
+      <option>English</option>
+      <option>Hindi</option>
+      <option>Gujarati</option>
+    </select>
 
-  <label>Email</label>
-  <input id="email">
+    <label class="check">
+      <input type="checkbox" id="notifications">
+      Enable Notifications
+    </label>
 
-  <label>Department</label>
-  <input id="department">
+    <button id="saveBtn">Save Settings</button>
 
-  <label>Language</label>
-  <select id="language">
-    <option>English</option>
-    <option>Hindi</option>
-    <option>Gujarati</option>
-  </select>
+    <hr>
 
-  <label class="check">
-    <input type="checkbox" id="notifications"> Enable Notifications
-  </label>
+    <h3>🔐 Change Password</h3>
+    <input id="oldPassword" type="password" placeholder="Old Password">
+    <input id="newPassword" type="password" placeholder="New Password">
+    <button id="passBtn">Change Password</button>
+  </div>
 
-  <button id="saveBtn">Save Settings</button>
-
-  <hr>
-
-  <h3>🔐 Change Password</h3>
-  <input id="oldPassword" type="password" placeholder="Old Password">
-  <input id="newPassword" type="password" placeholder="New Password">
-  <button id="passBtn">Change Password</button>
-</div>
-
-<script src="/civic/js/admin/adminsettings.js"></script>
-
+  <!-- ✅ Load JS ONCE, at the end -->
+  <script src="/civic/js/admin/adminsettings.js"></script>
 </body>
 </html>

@@ -1,22 +1,20 @@
 /* =====================================================
-   INVITE NEW STAFF MEMBER – SMART CITY ADMIN (FINAL)
-   ===================================================== */
+   INVITE NEW STAFF MEMBER – SMART CITY ADMIN (UPDATED)
+===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ===============================
      AUTH CHECK
-     =============================== */
-  const TOKEN = localStorage.getItem("token");
-  if (!TOKEN) {
-    alert("Unauthorized. Please login again.");
-    window.location.href = "/civic/html/auth/adminLogin.html";
-    return;
-  }
+  =============================== */
+  const session = JSON.parse(localStorage.getItem("citizenSession") || "null");
+
+
+  const TOKEN = session.token;
 
   /* ===============================
      ELEMENTS
-     =============================== */
+  =============================== */
   const steps = document.querySelectorAll(".step");
   const nextBtn = document.getElementById("nextBtn");
   const backBtn = document.getElementById("backBtn");
@@ -33,50 +31,52 @@ document.addEventListener("DOMContentLoaded", () => {
   const photoPreview = document.getElementById("photoPreview");
   const qrContainer = document.getElementById("qrCode");
 
-  const downloadPNG = document.getElementById("downloadPNG");
-  const downloadPDF = document.getElementById("downloadPDF");
-  const printBadge = document.getElementById("printBadge");
-
   const toastContainer = document.getElementById("toastContainer");
 
   let currentStep = 0;
 
   /* ===============================
      INIT
-     =============================== */
+  =============================== */
   generateEmployeeId();
   updateStep();
 
   /* ===============================
      FUNCTIONS
-     =============================== */
+  =============================== */
   function updateStep() {
-    steps.forEach((step, i) => {
-      step.style.display = i === currentStep ? "block" : "none";
+    steps.forEach((step, index) => {
+      step.style.display = index === currentStep ? "block" : "none";
     });
+
     backBtn.style.display = currentStep === 0 ? "none" : "inline-block";
     nextBtn.textContent =
       currentStep === steps.length - 1 ? "Finish" : "Next";
   }
 
   function generateEmployeeId() {
-    const id = "EMP-" + Date.now().toString().slice(-6);
+    const id = "EMP-" + Math.floor(100000 + Math.random() * 900000);
     empIdInput.value = id;
     previewEmpId.textContent = id;
+    generateQR(id);
   }
 
   function generateEmail(name) {
-    return name
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, ".") + "@smartcity.gov";
+    return (
+      name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z\s]/g, "")
+        .replace(/\s+/g, ".") + "@smartcity.gov"
+    );
   }
 
-  function showToast(msg, type = "success") {
+  function showToast(message, type = "success") {
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
-    toast.textContent = msg;
+    toast.textContent = message;
     toastContainer.appendChild(toast);
+
     setTimeout(() => toast.remove(), 3000);
   }
 
@@ -90,26 +90,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ===============================
-     NEXT / BACK
-     =============================== */
+     NEXT BUTTON
+  =============================== */
   nextBtn.addEventListener("click", async () => {
 
-    /* STEP 1 VALIDATION */
+    /* STEP 1: BASIC INFO */
     if (currentStep === 0) {
       if (!nameInput.value.trim()) {
-        showToast("Name is required", "error");
+        showToast("Full name is required", "error");
         return;
       }
 
-      emailInput.value = generateEmail(nameInput.value);
-      previewName.textContent = nameInput.value;
+      const email = generateEmail(nameInput.value);
+      emailInput.value = email;
+
+      previewName.textContent = nameInput.value.trim();
+      previewEmpId.textContent = empIdInput.value;
+
       generateQR(empIdInput.value);
     }
 
-    /* FINAL STEP → SEND TO BACKEND */
+    /* STEP 2: DEPARTMENT */
+    if (currentStep === 1) {
+      if (!departmentSelect.value) {
+        showToast("Please select a department", "error");
+        return;
+      }
+    }
+
+    /* FINAL STEP: SUBMIT */
     if (currentStep === steps.length - 1) {
       try {
-        const res = await fetch(
+        const response = await fetch(
           "http://localhost:5000/api/admin/staff/invite",
           {
             method: "POST",
@@ -127,23 +139,22 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         );
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if (!res.ok) {
-          showToast(data.message || "Failed to invite staff", "error");
+        if (!response.ok) {
+          showToast(data.message || "Invite failed", "error");
           return;
         }
 
-        showToast("✅ Staff invited successfully");
+        showToast("Staff invited successfully");
+
         setTimeout(() => {
           window.location.href = "/civic/html/admin/staf&userpage.html";
         }, 1200);
 
       } catch (err) {
-        console.error(err);
-        showToast("Server error", "error");
+        showToast("Server error. Try again later.", "error");
       }
-
       return;
     }
 
@@ -151,17 +162,28 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStep();
   });
 
+  /* ===============================
+     BACK BUTTON
+  =============================== */
   backBtn.addEventListener("click", () => {
-    currentStep--;
-    updateStep();
+    if (currentStep > 0) {
+      currentStep--;
+      updateStep();
+    }
   });
 
   /* ===============================
      PHOTO PREVIEW
-     =============================== */
+  =============================== */
   photoInput.addEventListener("change", e => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (file.size > 1024 * 1024) {
+      showToast("Image too large (Max 1MB)", "error");
+      photoInput.value = "";
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -172,58 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ===============================
      EMAIL VALIDATION
-     =============================== */
+  =============================== */
   emailInput.addEventListener("input", () => {
-    const valid = emailInput.value.endsWith("@smartcity.gov");
-    emailError.textContent = valid ? "" : "Invalid work email";
+    emailError.textContent = emailInput.value.endsWith("@smartcity.gov")
+      ? ""
+      : "Invalid work email";
   });
 
-  /* ===============================
-     DOWNLOAD PNG
-     =============================== */
-  downloadPNG.addEventListener("click", () => {
-    const img = qrContainer.querySelector("img");
-    if (!img) return;
-
-    const link = document.createElement("a");
-    link.href = img.src;
-    link.download = `${empIdInput.value}.png`;
-    link.click();
-  });
-
-  /* ===============================
-     DOWNLOAD PDF
-     =============================== */
-  downloadPDF.addEventListener("click", () => {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-
-    pdf.text("Smart City Staff Badge", 20, 20);
-    pdf.text(`Name: ${previewName.textContent}`, 20, 30);
-    pdf.text(`ID: ${previewEmpId.textContent}`, 20, 40);
-
-    const qrImg = qrContainer.querySelector("img");
-    if (qrImg) {
-      pdf.addImage(qrImg.src, "PNG", 20, 50, 50, 50);
-    }
-
-    pdf.save(`${empIdInput.value}.pdf`);
-  });
-
-  /* ===============================
-     PRINT BADGE
-     =============================== */
-  printBadge.addEventListener("click", () => {
-    const w = window.open("", "", "width=400,height=600");
-    w.document.write(`
-      <h3>Smart City Staff Badge</h3>
-      <p>${previewName.textContent}</p>
-      <p>${previewEmpId.textContent}</p>
-      ${qrContainer.innerHTML}
-    `);
-    w.document.close();
-    w.print();
-  });
-
-  console.log("✅ Invite Staff Frontend Loaded Successfully");
+  console.log("Invite Staff module loaded successfully");
 });

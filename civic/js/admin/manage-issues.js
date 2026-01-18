@@ -1,80 +1,59 @@
 /* =====================================================
-   MANAGE ISSUES – CIVICCARE ADMIN (FIXED)
-   ===================================================== */
+   MANAGE ISSUES – CIVICCARE ADMIN (FINAL FIXED)
+===================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   /* ===============================
-     ISSUE ID FROM URL
-     =============================== */
-  const issueId = new URLSearchParams(window.location.search).get("id");
-  const token = localStorage.getItem("token");
+     AUTH CHECK
+  =============================== */
+  let session = null;
+  try {
+    session = JSON.parse(localStorage.getItem("citizenSession"));
+  } catch {
+    session = null;
+  }
 
+
+  const TOKEN = session.token;
+  const API_BASE = "http://localhost:5000/api/admin";
+
+  /* ===============================
+     ISSUE ID
+  =============================== */
+  const issueId = new URLSearchParams(window.location.search).get("id");
   if (!issueId) {
     alert("Invalid Issue ID");
     return;
   }
 
   /* ===============================
-     MAP (LEAFLET)
-     =============================== */
-  const map = L.map("map").setView([23.0225, 72.5714], 15);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap"
-  }).addTo(map);
-
-  L.marker([23.0225, 72.5714])
-    .addTo(map)
-    .bindPopup("📍 Issue Location");
-
-  /* ===============================
-     IMAGE GALLERY
-     =============================== */
+     ELEMENTS
+  =============================== */
   const mainImage = document.getElementById("mainImage");
-  const thumbs = document.querySelectorAll(".thumb");
+  const thumbsContainer = document.querySelector(".thumbs");
+  const activityLog = document.getElementById("activityLog");
 
-  thumbs.forEach(thumb => {
-    thumb.addEventListener("click", () => {
-      thumbs.forEach(t => t.classList.remove("active"));
-      thumb.classList.add("active");
-      mainImage.src = thumb.src;
-    });
-  });
+  const statusSelect = document.getElementById("status");
+  const prioritySelect = document.getElementById("priority");
+  const crewSelect = document.getElementById("crew");
+  const noteInput = document.getElementById("note");
 
-  /* ===============================
-     VOICE NOTE PLAYER
-     =============================== */
+  const addNoteBtn = document.getElementById("addNote");
+  const updateIssueBtn = document.getElementById("updateIssue");
+  const exportBtn = document.getElementById("exportPDF");
+
   const audio = document.getElementById("voiceAudio");
-  const toggleBtn = document.getElementById("voiceToggle");
-  const icon = document.getElementById("voiceIcon");
-  const progressBar = document.getElementById("voiceProgress");
-  const timeLabel = document.getElementById("voiceTime");
-
-  toggleBtn.addEventListener("click", () => {
-    audio.paused ? audio.play() : audio.pause();
-    icon.textContent = audio.paused ? "play_arrow" : "pause";
-  });
-
-  audio.addEventListener("timeupdate", () => {
-    if (!audio.duration) return;
-    progressBar.style.width = (audio.currentTime / audio.duration) * 100 + "%";
-    const mins = Math.floor(audio.currentTime / 60);
-    const secs = Math.floor(audio.currentTime % 60).toString().padStart(2, "0");
-    timeLabel.textContent = `${mins}:${secs}`;
-  });
-
-  audio.addEventListener("ended", () => {
-    icon.textContent = "play_arrow";
-    progressBar.style.width = "0%";
-  });
+  const voiceToggle = document.getElementById("voiceToggle");
+  const voiceIcon = document.getElementById("voiceIcon");
+  const voiceProgress = document.getElementById("voiceProgress");
+  const voiceTime = document.getElementById("voiceTime");
 
   /* ===============================
      ACTIVITY LOG
-     =============================== */
-  const activityLog = document.getElementById("activityLog");
-
+  =============================== */
   function addLog(message) {
+    if (!activityLog) return;
     const entry = document.createElement("div");
     entry.className = "log-entry";
     entry.innerHTML = `
@@ -84,93 +63,172 @@ document.addEventListener("DOMContentLoaded", () => {
     activityLog.prepend(entry);
   }
 
-  addLog("Issue loaded in admin panel");
+  /* ===============================
+     LOAD ISSUE
+  =============================== */
+  let issue = null;
+
+  async function loadIssue() {
+    try {
+      const res = await fetch(`${API_BASE}/issues/${issueId}`, {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+      });
+
+      if (res.status === 401) {
+        localStorage.removeItem("citizenSession");
+        window.location.replace("/civic/html/auth/adminLogin.html");
+        return;
+      }
+
+      if (!res.ok) throw new Error("Failed to load issue");
+
+      issue = await res.json();
+      hydrateUI(issue);
+      initMap(issue.location);
+      addLog("Issue loaded in admin panel");
+
+    } catch (err) {
+      console.error("LOAD ISSUE ERROR:", err);
+      alert("Failed to load issue");
+    }
+  }
 
   /* ===============================
-     ADMIN CONTROLS
-     =============================== */
-  const statusSelect = document.getElementById("status");
-  const prioritySelect = document.getElementById("priority");
-  const crewSelect = document.getElementById("crew");
-  const noteInput = document.getElementById("note");
+     HYDRATE UI
+  =============================== */
+  function hydrateUI(issue) {
+    statusSelect.value = issue.status || "Submitted";
+    prioritySelect.value = issue.priority || "low";
 
-  const addNoteBtn = document.getElementById("addNote");
-  const updateIssueBtn = document.getElementById("updateIssue");
+    /* IMAGES */
+    if (Array.isArray(issue.media) && issue.media.length) {
+      mainImage.src = `/uploads/${issue.media[0]}`;
+      thumbsContainer.innerHTML = "";
 
-  /* ---------- ADD NOTE ---------- */
-  addNoteBtn.addEventListener("click", async () => {
+      issue.media.forEach((img, i) => {
+        const thumb = document.createElement("img");
+        thumb.src = `/uploads/${img}`;
+        thumb.className = `thumb ${i === 0 ? "active" : ""}`;
+
+        thumb.onclick = () => {
+          document.querySelectorAll(".thumb")
+            .forEach(t => t.classList.remove("active"));
+          thumb.classList.add("active");
+          mainImage.src = thumb.src;
+        };
+
+        thumbsContainer.appendChild(thumb);
+      });
+    }
+
+    /* VOICE NOTE */
+    if (issue.voiceNote && audio) {
+      audio.src = `/uploads/${issue.voiceNote}`;
+    }
+  }
+
+  /* ===============================
+     MAP
+  =============================== */
+  function initMap(location) {
+    if (!location) return;
+
+    const [lat, lng] = location.split(",").map(v => Number(v.trim()));
+    if (!lat || !lng) return;
+
+    const map = L.map("map").setView([lat, lng], 16);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap"
+    }).addTo(map);
+
+    L.marker([lat, lng]).addTo(map).bindPopup("Issue Location");
+  }
+
+  /* ===============================
+     VOICE PLAYER
+  =============================== */
+  if (audio && voiceToggle) {
+    voiceToggle.onclick = () => {
+      audio.paused ? audio.play() : audio.pause();
+      voiceIcon.textContent = audio.paused ? "play_arrow" : "pause";
+    };
+
+    audio.ontimeupdate = () => {
+      if (!audio.duration) return;
+      voiceProgress.style.width =
+        (audio.currentTime / audio.duration) * 100 + "%";
+
+      const m = Math.floor(audio.currentTime / 60);
+      const s = Math.floor(audio.currentTime % 60).toString().padStart(2, "0");
+      voiceTime.textContent = `${m}:${s}`;
+    };
+
+    audio.onended = () => {
+      voiceIcon.textContent = "play_arrow";
+      voiceProgress.style.width = "0%";
+    };
+  }
+
+  /* ===============================
+     ADD NOTE
+  =============================== */
+  addNoteBtn.onclick = async () => {
     const note = noteInput.value.trim();
-    if (!note) return alert("Please enter a note");
+    if (!note) return alert("Enter a note");
 
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/admin/issues/${issueId}/note`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ note })
-        }
-      );
+    await fetch(`${API_BASE}/issues/${issueId}/note`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`
+      },
+      body: JSON.stringify({ note })
+    });
 
-      if (!res.ok) throw new Error("Failed to add note");
+    addLog(`Internal Note: ${note}`);
+    noteInput.value = "";
+  };
 
-      addLog(`📝 Internal Note: ${note}`);
-      noteInput.value = "";
+  /* ===============================
+     UPDATE ISSUE
+  =============================== */
+  updateIssueBtn.onclick = async () => {
+    await fetch(`${API_BASE}/issues/${issueId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`
+      },
+      body: JSON.stringify({
+        status: statusSelect.value,
+        priority: prioritySelect.value,
+        crew: crewSelect.value || null
+      })
+    });
 
-    } catch (err) {
-      alert("Error adding note");
-    }
-  });
-
-  /* ---------- UPDATE ISSUE ---------- */
-  updateIssueBtn.addEventListener("click", async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/admin/issues/${issueId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            status: statusSelect.value,
-            priority: prioritySelect.value,
-            crew: crewSelect.value
-          })
-        }
-      );
-
-      if (!res.ok) throw new Error("Update failed");
-
-      addLog(`✅ Issue updated → Status: ${statusSelect.value}, Priority: ${prioritySelect.value}, Crew: ${crewSelect.value || "Unassigned"}`);
-      alert("Issue updated successfully");
-
-    } catch (err) {
-      alert("Failed to update issue");
-    }
-  });
+    addLog(`Issue updated → ${statusSelect.value}`);
+    alert("Issue updated successfully");
+  };
 
   /* ===============================
      EXPORT PDF
-     =============================== */
-  document.getElementById("exportPDF").addEventListener("click", () => {
+  =============================== */
+  exportBtn.onclick = () => {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
 
-    pdf.setFontSize(16);
     pdf.text("CivicCare Issue Report", 20, 20);
+    pdf.text(`Issue ID: ${issueId}`, 20, 35);
+    pdf.text(`Status: ${statusSelect.value}`, 20, 45);
+    pdf.text(`Priority: ${prioritySelect.value}`, 20, 55);
 
-    pdf.setFontSize(12);
-    pdf.text("Status: " + statusSelect.value, 20, 40);
-    pdf.text("Priority: " + prioritySelect.value, 20, 50);
-    pdf.text("Assigned Crew: " + (crewSelect.value || "None"), 20, 60);
+    pdf.save(`issue-${issueId}.pdf`);
+  };
 
-    pdf.save("issue-report.pdf");
-  });
+  /* ===============================
+     INIT
+  =============================== */
+  await loadIssue();
+  console.log(" Manage Issues loaded successfully");
 
-  console.log("✅ Manage Issues JS Loaded & Connected");
 });

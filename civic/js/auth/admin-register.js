@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmPassword = document.getElementById("confirmPassword");
 
   function showMessage(msg, success = false) {
-    alert((success ? "✅ " : "❌ ") + msg);
+    alert((success ? " " : " ") + msg);
   }
 
   form.addEventListener("submit", async (e) => {
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       showMessage(data.message || "Registration successful", true);
 
-      // ✅ CORRECT REDIRECT PATH
+      //  CORRECT REDIRECT PATH
       setTimeout(() => {
         window.location.href = "/civic/html/auth/adminLogin.html";
       }, 800);

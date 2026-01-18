@@ -1,8 +1,28 @@
 /* =====================================================
-   ADMIN SETTINGS – SMART CITY (BACKEND CONNECTED)
-   ===================================================== */
+   ADMIN SETTINGS – SMART CITY (FIXED & SECURE)
+===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  const API_BASE = "http://localhost:5000/api/admin";
+
+  /* ======================
+     AUTH GUARD
+  ====================== */
+  let session = null;
+
+  try {
+    session = JSON.parse(localStorage.getItem("citizenSession"));
+  } catch {
+    session = null;
+  }
+
+
+  const authHeaders = {
+    Authorization: `Bearer ${session.token}`,
+    "Content-Type": "application/json"
+  };
+
   /* ---------- ELEMENTS ---------- */
   const nameInput = document.getElementById("name");
   const emailInput = document.getElementById("email");
@@ -16,27 +36,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const oldPassword = document.getElementById("oldPassword");
   const newPassword = document.getElementById("newPassword");
 
-  const API_BASE = "http://localhost:5000/api/admin";
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    alert("⚠️ Session expired. Please login again.");
-    window.location.href = "/civic/html/auth/adminLogin.html";
-    return;
+  /* ======================
+     FORCE LOGOUT
+  ====================== */
+  function forceLogout() {
+    localStorage.removeItem("citizenSession");
+    window.location.replace("/civic/html/auth/adminLogin.html");
   }
 
-  /* =====================================================
-     LOAD ADMIN SETTINGS
-     ===================================================== */
+  /* ======================
+     LOAD SETTINGS
+  ====================== */
   async function loadSettings() {
     try {
       const res = await fetch(`${API_BASE}/settings`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: authHeaders
       });
 
-      if (!res.ok) throw new Error("Failed to load settings");
+      if (res.status === 401 || res.status === 403) {
+        forceLogout();
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(`Failed to load settings (${res.status})`);
+      }
 
       const data = await res.json();
 
@@ -46,75 +70,65 @@ document.addEventListener("DOMContentLoaded", () => {
       languageSelect.value = data.language || "English";
       notificationCheck.checked = data.notifications ?? true;
 
-      console.log("✅ Admin settings loaded");
     } catch (err) {
-      console.error(err);
-      alert("❌ Failed to load admin settings");
+      console.error("SETTINGS LOAD ERROR:", err.message);
+      alert("Failed to load admin settings");
     }
   }
 
   loadSettings();
 
-  /* =====================================================
+  /* ======================
      SAVE SETTINGS
-     ===================================================== */
+  ====================== */
   saveBtn.addEventListener("click", async () => {
     if (!nameInput.value || !emailInput.value) {
-      alert("⚠️ Name and Email are required");
+      alert("Name and Email are required");
       return;
     }
-
-    const payload = {
-      name: nameInput.value.trim(),
-      email: emailInput.value.trim(),
-      department: departmentInput.value.trim(),
-      language: languageSelect.value,
-      notifications: notificationCheck.checked
-    };
 
     try {
       const res = await fetch(`${API_BASE}/settings`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
+        headers: authHeaders,
+        body: JSON.stringify({
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim(),
+          department: departmentInput.value.trim(),
+          language: languageSelect.value,
+          notifications: notificationCheck.checked
+        })
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.message);
 
-      alert("✅ Settings saved successfully");
-      console.log("Updated Settings:", data);
+      alert(" Settings saved successfully");
+
     } catch (err) {
-      console.error(err);
-      alert("❌ Failed to save settings");
+      console.error("SAVE SETTINGS ERROR:", err.message);
+      alert("Failed to save settings");
     }
   });
 
-  /* =====================================================
+  /* ======================
      CHANGE PASSWORD
-     ===================================================== */
+  ====================== */
   passBtn.addEventListener("click", async () => {
     if (!oldPassword.value || !newPassword.value) {
-      alert("⚠️ Please fill both password fields");
+      alert("Please fill both password fields");
       return;
     }
 
     if (newPassword.value.length < 6) {
-      alert("⚠️ New password must be at least 6 characters");
+      alert("New password must be at least 6 characters");
       return;
     }
 
     try {
       const res = await fetch(`${API_BASE}/change-password`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
+        headers: authHeaders,
         body: JSON.stringify({
           oldPassword: oldPassword.value,
           newPassword: newPassword.value
@@ -122,31 +136,18 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.message);
 
-      alert("🔐 Password changed successfully");
-
+      alert(" Password changed successfully");
       oldPassword.value = "";
       newPassword.value = "";
+
     } catch (err) {
-      console.error(err);
-      alert("❌ Password change failed");
+      console.error("PASSWORD CHANGE ERROR:", err.message);
+      alert("Password change failed");
     }
   });
 
-  /* =====================================================
-     UI FEEDBACK
-     ===================================================== */
-  languageSelect.addEventListener("change", () => {
-    console.log(`🌐 Language set to ${languageSelect.value}`);
-  });
+  console.log(" Admin Settings Loaded");
 
-  notificationCheck.addEventListener("change", () => {
-    console.log(
-      `🔔 Notifications ${notificationCheck.checked ? "enabled" : "disabled"}`
-    );
-  });
-
-  console.log("✅ Admin Settings JS Loaded (Backend Connected)");
 });

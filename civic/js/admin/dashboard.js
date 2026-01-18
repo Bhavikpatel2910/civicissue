@@ -1,3 +1,25 @@
+/* =====================================================
+   ADMIN DASHBOARD – REAL BACKEND CONNECTED
+===================================================== */
+
+const API_BASE = "http://localhost:5000/api";
+
+/* ======================
+   SESSION + AUTH
+====================== */
+let session = null;
+
+try {
+  session = JSON.parse(localStorage.getItem("citizenSession"));
+} catch {
+  session = null;
+}
+
+
+const AUTH_HEADERS = {
+  Authorization: `Bearer ${session.token}`
+};
+
 /* ======================
    CONFIG
 ====================== */
@@ -6,51 +28,62 @@ const tenant = {
   name: "Ahmedabad Municipal Corporation"
 };
 
-const userRole = "admin"; // admin | staff | viewer
-
 const SLA = {
   responseHours: 24,
   resolutionHours: 72
 };
 
-/* ======================
-   DATA (demo)
-====================== */
-let issues = [
-  {
-    id: "CIV-101",
-    title: "Water leakage",
-    status: "pending",
-    priority: "high",
-    submittedDate: Date.now() - 1000 * 60 * 60 * 30
-  },
-  {
-    id: "CIV-102",
-    title: "Garbage overflow",
-    status: "in-progress",
-    priority: "medium",
-    submittedDate: Date.now() - 1000 * 60 * 60 * 12
-  },
-  {
-    id: "CIV-103",
-    title: "Streetlight fixed",
-    status: "resolved",
-    priority: "low",
-    submittedDate: Date.now()
-  }
-];
+let issues = [];
 
 /* ======================
    INIT
 ====================== */
 document.getElementById("tenantName").innerText = tenant.name;
-document.getElementById("userRole").innerText = userRole;
+document.getElementById("userRole").innerText = session.role;
 
 applyRBAC();
-loadCache();
-render();
-checkSLABreaches();
-detectAnomaly();
+loadIssues();
+
+/* ======================
+   LOAD REPORTS
+====================== */
+async function loadIssues() {
+  try {
+    const res = await fetch(`${API_BASE}/reports`, {
+      headers: AUTH_HEADERS
+    });
+
+    if (res.status === 401) {
+      localStorage.removeItem("citizenSession");
+      window.location.replace("/civic/html/auth/adminLogin.html");
+      return;
+    }
+
+    const data = await res.json();
+
+    issues = data.map(r => ({
+      id: r._id,
+      title: r.title,
+      priority: r.priority || "low",
+      submittedDate: new Date(r.createdAt).getTime(),
+      status: normalizeStatus(r.status)
+    }));
+
+    render();
+    checkSLABreaches();
+    detectAnomaly();
+
+  } catch (err) {
+    console.error("Dashboard load error:", err.message);
+  }
+}
+
+/* ======================
+   STATUS NORMALIZER
+====================== */
+function normalizeStatus(status = "") {
+  return status.toLowerCase().replace(" ", "-");
+}
 
 /* ======================
    RENDER
@@ -83,7 +116,9 @@ function renderIssues() {
         <div class="title">${i.title}</div>
         <div class="meta">${i.id}</div>
       </div>
-      <div class="status ${i.status}">${i.status}</div>
+      <div class="status ${i.status}">
+        ${i.status.replace("-", " ").toUpperCase()}
+      </div>
     `;
     list.appendChild(div);
   });
@@ -94,6 +129,7 @@ function renderIssues() {
 ====================== */
 function checkSLABreaches() {
   const now = Date.now();
+
   const breached = issues.filter(i => {
     const hours = (now - i.submittedDate) / 36e5;
     return (
@@ -102,22 +138,25 @@ function checkSLABreaches() {
     );
   });
 
+  const banner = document.getElementById("slaBanner");
   if (breached.length) {
-    const banner = document.getElementById("slaBanner");
-    banner.innerText = `⚠️ ${breached.length} SLA breaches detected`;
+    banner.innerText = `${breached.length} SLA breaches detected`;
     banner.classList.add("visible");
+  } else {
+    banner.classList.remove("visible");
   }
 }
 
 /* ======================
-   ANOMALY
+   ANOMALY DETECTION
 ====================== */
 function detectAnomaly() {
-  const last7 = [10,12,11,13,12,11,12];
+  const history = [10, 12, 11, 13, 12, 11, 12];
   const today = issues.length;
 
-  const avg = last7.reduce((a,b)=>a+b,0)/last7.length;
-  const variance = last7.reduce((s,v)=>s+(v-avg)**2,0)/last7.length;
+  const avg = history.reduce((a, b) => a + b, 0) / history.length;
+  const variance =
+    history.reduce((s, v) => s + (v - avg) ** 2, 0) / history.length;
   const std = Math.sqrt(variance);
 
   if (Math.abs(today - avg) > 2 * std) {
@@ -126,38 +165,41 @@ function detectAnomaly() {
 }
 
 /* ======================
-   OFFLINE CACHE
-====================== */
-function loadCache() {
-  const cached = localStorage.getItem("issues");
-  if (cached) issues = JSON.parse(cached);
-}
-
-function saveCache() {
-  localStorage.setItem("issues", JSON.stringify(issues));
-}
-
-window.addEventListener("offline", () =>
-  document.body.classList.add("offline")
-);
-window.addEventListener("online", () => {
-  document.body.classList.remove("offline");
-  saveCache();
-});
-
-/* ======================
    RBAC
 ====================== */
 function applyRBAC() {
   document.querySelectorAll("[data-role]").forEach(el => {
-    if (el.dataset.role !== userRole) {
+    if (el.dataset.role !== session.role) {
       el.style.display = "none";
     }
   });
 }
 
 /* ======================
-   PDF EXPORT
+   UPDATE REPORT STATUS
+====================== */
+function updateReport(reportId, status, note = "") {
+  fetch(`${API_BASE}/reports/${reportId}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...AUTH_HEADERS
+    },
+    body: JSON.stringify({ status, note })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Update failed");
+      return res.json();
+    })
+    .then(() => {
+      alert("Status updated");
+      loadIssues();
+    })
+    .catch(err => alert(err.message));
+}
+
+/* ======================
+   EXPORT PDF
 ====================== */
 document.getElementById("exportPdfBtn").onclick = async () => {
   const canvas = await html2canvas(document.body, { scale: 2 });
@@ -168,43 +210,9 @@ document.getElementById("exportPdfBtn").onclick = async () => {
 };
 
 /* ======================
-   SYNC
+   MANUAL SYNC
 ====================== */
 document.getElementById("syncBtn").onclick = () => {
-  saveCache();
-  alert("Synced");
+  loadIssues();
+  alert("Synced with server");
 };
-
-/* ======================
-   LIVE UPDATE (SIMULATION)
-====================== */
-setInterval(() => {
-  issues.push({
-    id: "CIV-" + Math.floor(Math.random() * 1000),
-    title: "Live reported issue",
-    status: "pending",
-    priority: "low",
-    submittedDate: Date.now()
-  });
-  render();
-  checkSLABreaches();
-}, 20000);
-
-function updateReport(reportId, status, note) {
-  fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ status, note })
-  })
-  .then(res => res.json())
-  .then(() => alert("Status updated"));
-}
-
-fetch("http://localhost:5000/api/reports")
-.then(r=>r.json())
-.then(reports=>{
-  reports.forEach(r=>{
-    console.log(r.title, r.status, r.department);
-  });
-});
-

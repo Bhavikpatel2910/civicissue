@@ -1,16 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ================================
-     RUN ONLY ON ReportIssue Page
+     RUN ONLY ON ReportIssue PAGE
   ================================= */
   if (!location.pathname.toLowerCase().includes("reportissue")) return;
 
   /* ================================
+     CONFIG  FIXED
+  ================================= */
+  const API_BASE = "http://localhost:5000/api";
+
+  function redirectToLogin() {
+    window.location.replace("/civic/html/auth/index.html");
+  }
+
+  /* ================================
      AUTH CHECK
   ================================= */
-  const session = JSON.parse(localStorage.getItem("citizenSession"));
+  let session = null;
+  try {
+    session = JSON.parse(localStorage.getItem("citizenSession"));
+  } catch {
+    session = null;
+  }
+
   if (!session || !session.token) {
-    window.location.href = "/civic/html/auth/LoginPage.html";
+    redirectToLogin();
     return;
   }
 
@@ -51,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
   fileInput.accept = "image/*,video/*";
   fileInput.multiple = true;
 
-  thumbnails.querySelectorAll(".add").forEach(btn => {
+  thumbnails?.querySelectorAll(".add").forEach(btn => {
     btn.onclick = () => fileInput.click();
   });
 
@@ -64,24 +79,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const div = document.createElement("div");
         div.className = "thumb";
         div.style.backgroundImage = `url(${e.target.result})`;
-        thumbnails.prepend(div);
-        previewText.textContent = file.name;
+        thumbnails?.prepend(div);
+        if (previewText) previewText.textContent = file.name;
       };
       reader.readAsDataURL(file);
     });
   };
-
-  /* ================================
-     VOICE INPUT
-  ================================= */
-  if ("webkitSpeechRecognition" in window && voiceBtn) {
-    const rec = new webkitSpeechRecognition();
-    rec.lang = "en-US";
-    rec.onresult = e => {
-      textarea.value += " " + e.results[0][0].transcript;
-    };
-    voiceBtn.onclick = () => rec.start();
-  }
 
   /* ================================
      MAP + GPS
@@ -89,36 +92,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let latitude = null;
   let longitude = null;
 
-  gpsStatus.textContent = "Locating...";
-  gpsStatus.parentElement.classList.add("loading");
+  if (gpsStatus) gpsStatus.textContent = "Locating...";
 
   const map = L.map("map").setView([20.5937, 78.9629], 5);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap"
-  }).addTo(map);
-
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
   const marker = L.marker([20.5937, 78.9629], { draggable: true }).addTo(map);
 
   function updatePosition(lat, lng) {
     latitude = lat;
     longitude = lng;
-
     marker.setLatLng([lat, lng]);
     map.setView([lat, lng], 16);
-
-    gpsStatus.textContent = "GPS Locked";
-    gpsStatus.parentElement.classList.remove("loading");
-    gpsStatus.parentElement.classList.add("locked");
-
+    if (gpsStatus) gpsStatus.textContent = "GPS Locked";
     fetchAddress(lat, lng);
   }
 
   navigator.geolocation.getCurrentPosition(
     pos => updatePosition(pos.coords.latitude, pos.coords.longitude),
-    () => {
-      gpsStatus.textContent = "Location denied";
-      gpsStatus.parentElement.classList.remove("loading");
-    }
+    () => gpsStatus && (gpsStatus.textContent = "Location denied")
   );
 
   marker.on("dragend", () => {
@@ -132,54 +123,16 @@ document.addEventListener("DOMContentLoaded", () => {
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
       );
       const data = await res.json();
-      addressInput.value = data.display_name || "";
-    } catch {
-      addressInput.value = "";
-    }
+      if (addressInput) addressInput.value = data.display_name || "";
+    } catch {}
   }
 
-  setTimeout(() => {
-    map.invalidateSize();
-  }, 500);
-
   /* ================================
-     LOAD DRAFT
-  ================================= */
-  const draft = JSON.parse(localStorage.getItem("reportDraft") || "{}");
-
-  if (draft.description) textarea.value = draft.description;
-  if (draft.category) selectedCategory = draft.category;
-
-  categoryButtons.forEach(btn => {
-    btn.classList.toggle("active", btn.innerText.trim() === selectedCategory);
-  });
-
-  /* ================================
-     SAVE DRAFT
-  ================================= */
-  saveDraftBtn.onclick = () => {
-    localStorage.setItem("reportDraft", JSON.stringify({
-      category: selectedCategory,
-      description: textarea.value,
-      lat: latitude,
-      lng: longitude
-    }));
-    alert("Draft saved");
-  };
-
-  /* ================================
-     BACK
-  ================================= */
-  backBtn.onclick = () => {
-    window.location.href = "/civic/html/user/UserDashboard.html";
-  };
-
-  /* ================================
-     SUBMIT
+     SUBMIT REPORT   FIXED
   ================================= */
   let isSubmitting = false;
 
-  submitBtn.onclick = async () => {
+  submitBtn?.addEventListener("click", async () => {
     if (isSubmitting) return;
 
     if (!textarea.value.trim()) return alert("Describe the issue");
@@ -197,21 +150,23 @@ document.addEventListener("DOMContentLoaded", () => {
     uploadedFiles.forEach(f => form.append("media", f));
 
     try {
-      const res = await fetch("http://localhost:5000/api/report", {
+      const res = await fetch(`${API_BASE}/report`, {
         method: "POST",
         headers: {
-          Authorization: "Bearer " + session.token
+          Authorization: `Bearer ${session.token}`
         },
         body: form
       });
 
-      const data = await res.json();
+      if (res.status === 401) {
+        redirectToLogin();
+        return;
+      }
 
+      const data = await res.json();
       if (!data.success) throw new Error(data.message);
 
       localStorage.removeItem("reportDraft");
-      localStorage.setItem("lastSubmittedReport", JSON.stringify(data));
-
       window.location.href = "/civic/html/user/CommunityPage.html";
 
     } catch (err) {
@@ -220,6 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
       submitBtn.innerText = "Submit Report";
       isSubmitting = false;
     }
-  };
+  });
 
 });

@@ -131,7 +131,7 @@ document.querySelector(".primary").onclick = () => {
 };
 
 document.querySelector(".secondary").onclick = () => {
-  alert("Profile editing coming soon 🚀");
+  alert("Profile editing coming soon ");
 };
 
 // Start

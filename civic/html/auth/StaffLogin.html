@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Login | City Services</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/civic/css/auth/stafflogin.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="material-symbols-outlined icon">shield_person</span>
+    <h2>Staff Portal</h2>
+  </div>
+  <a class="login-link" href="/civic/html/auth/index.html">Citizen Login</a>
+</header>
+
+<main class="page">
+  <div class="card">
+
+    <h1>Staff Login</h1>
+    <p class="subtitle">
+      Authorized government staff only
+    </p>
+
+    <!-- LOGIN FORM -->
+    <form id="staffLoginForm">
+
+      <div class="field">
+        <label>Work Email (.gov)</label>
+        <input id="email" type="email" placeholder="name@city.gov" required>
+        <small class="error" id="emailError"></small>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+
+        <div class="password-wrap">
+          <input id="password" type="password" placeholder="************" required>
+          <button type="button" id="togglePassword">👁</button>
+        </div>
+
+        <small class="error" id="passwordError"></small>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">
+        <span class="btn-text">Log In</span>
+        <span class="spinner hidden"></span>
+      </button>
+
+    </form>
+
+    <p class="switch">
+      New staff member?
+      <a href="/civic/html/auth/StaffRegister.html">Register here</a>
+    </p>
+
+  </div>
+</main>
+
+<footer class="footer">
+  © 2024 City Government Operations. Secure access only.
+</footer>
+
+<script src="/civic/js/auth/stafflogin.js"></script>
+</body>
+</html>

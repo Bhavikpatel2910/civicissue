@@ -1,8 +1,26 @@
 /* =====================================================
-   USER & STAFF MANAGEMENT – CIVIC ADMIN
-   ===================================================== */
+   USER & STAFF MANAGEMENT – CIVIC ADMIN (FIXED)
+===================================================== */
 
+/* ======================
+   AUTH GUARD
+====================== */
+let session = null;
+
+try {
+  session = JSON.parse(localStorage.getItem("citizenSession"));
+} catch {
+  session = null;
+}
+
+
+/* ======================
+   DOM READY
+====================== */
 document.addEventListener("DOMContentLoaded", () => {
+
+  const API = "http://localhost:5000/api/admin";
+  const TOKEN = session.token;
 
   /* ---------- ELEMENTS ---------- */
   const tableBody = document.getElementById("userTableBody");
@@ -10,80 +28,115 @@ document.addEventListener("DOMContentLoaded", () => {
   const statusFilter = document.getElementById("statusFilter");
   const roleFilter = document.getElementById("roleFilter");
   const pagination = document.getElementById("pagination");
-  const backBtn = document.getElementById("backBtn"); // ✅ SAFE
 
-  /* ---------- DATA (API READY) ---------- */
-  let users = [
-    {
-      id: 1,
-      name: "Rohit Sharma",
-      email: "rohit@civiccare.gov",
-      role: "admin",
-      department: "Executive",
-      status: "active",
-      lastActive: "2 mins ago"
-    },
-    {
-      id: 2,
-      name: "Neha Patel",
-      email: "neha@civiccare.gov",
-      role: "dispatcher",
-      department: "Control Room",
-      status: "active",
-      lastActive: "10 mins ago"
-    },
-    {
-      id: 3,
-      name: "Amit Verma",
-      email: "amit@civiccare.gov",
-      role: "crew",
-      department: "Public Works",
-      status: "suspended",
-      lastActive: "Yesterday"
-    },
-    {
-      id: 4,
-      name: "Priya Shah",
-      email: "priya@gmail.com",
-      role: "citizen",
-      department: "—",
-      status: "active",
-      lastActive: "5 hrs ago"
-    }
-  ];
+  /* ---------- STATE ---------- */
+  let users = [];
+  let filteredUsers = [];
 
-  /* ---------- PAGINATION ---------- */
-  const rowsPerPage = 4;
+  const rowsPerPage = 6;
   let currentPage = 1;
 
-  /* ---------- RENDER TABLE ---------- */
-  function renderTable(data) {
+  /* ======================
+     FETCH USERS
+====================== */
+  async function loadUsers() {
+    try {
+      const res = await fetch(`${API}/users`, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`
+        }
+      });
+
+      if (res.status === 401) {
+        localStorage.removeItem("citizenSession");
+        window.location.replace("/civic/html/auth/adminLogin.html");
+        return;
+      }
+
+      if (!res.ok) throw new Error("Fetch failed");
+
+      users = await res.json();
+      normalizeUsers();
+      applyFilters();
+
+    } catch (err) {
+      console.error("USER LOAD ERROR:", err);
+      tableBody.innerHTML =
+        `<tr><td colspan="7">Failed to load users</td></tr>`;
+    }
+  }
+
+  /* ======================
+     NORMALIZE DATA
+====================== */
+  function normalizeUsers() {
+    users = users.map(u => ({
+      ...u,
+      name: u.name || "Unknown",
+      email: u.email || "—",
+      role: (u.role || "citizen").toLowerCase(),
+      status: (u.status || "active").toLowerCase(),
+      lastActive:
+        u.lastActive ||
+        u.lastLogin ||
+        (u.updatedAt
+          ? new Date(u.updatedAt).toLocaleString()
+          : "—")
+    }));
+  }
+
+  /* ======================
+     FILTER + SEARCH
+====================== */
+  function applyFilters() {
+    const search = searchInput?.value.toLowerCase().trim() || "";
+    const status = statusFilter?.value || "all";
+    const role = roleFilter?.value || "all";
+
+    filteredUsers = users.filter(u => {
+      const matchSearch =
+        u.name.toLowerCase().includes(search) ||
+        u.email.toLowerCase().includes(search);
+
+      const matchStatus = status === "all" || u.status === status;
+      const matchRole = role === "all" || u.role === role;
+
+      return matchSearch && matchStatus && matchRole;
+    });
+
+    currentPage = 1;
+    renderTable();
+  }
+
+  /* ======================
+     TABLE RENDER
+====================== */
+  function renderTable() {
     if (!tableBody) return;
 
     tableBody.innerHTML = "";
 
-    if (data.length === 0) {
+    if (!filteredUsers.length) {
       tableBody.innerHTML =
-        "<tr><td colspan='7'>No users found</td></tr>";
+        `<tr><td colspan="7">No users found</td></tr>`;
+      renderPagination(0);
       return;
     }
 
     const start = (currentPage - 1) * rowsPerPage;
-    const paginated = data.slice(start, start + rowsPerPage);
+    const pageData = filteredUsers.slice(start, start + rowsPerPage);
 
-    paginated.forEach(user => {
+    pageData.forEach(user => {
       const tr = document.createElement("tr");
 
       tr.innerHTML = `
-        <td>
-          <div class="avatar">${user.name.charAt(0)}</div>
-        </td>
+        <td><div class="avatar">${user.name.charAt(0)}</div></td>
         <td>
           <strong>${user.name}</strong><br>
           <small>${user.email}</small>
         </td>
         <td>${capitalize(user.role)}</td>
-        <td>${user.department}</td>
+        <td>${user.department || "—"}</td>
         <td>
           <span class="status ${user.status}">
             ${capitalize(user.status)}
@@ -91,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </td>
         <td>${user.lastActive}</td>
         <td>
-          <button class="action-btn" data-id="${user.id}">
+          <button class="action-btn" data-id="${user._id}">
             <span class="material-symbols-outlined">more_vert</span>
           </button>
         </td>
@@ -100,11 +153,13 @@ document.addEventListener("DOMContentLoaded", () => {
       tableBody.appendChild(tr);
     });
 
-    renderPagination(data.length);
-    attachActionHandlers();
+    renderPagination(filteredUsers.length);
+    attachActions();
   }
 
-  /* ---------- PAGINATION UI ---------- */
+  /* ======================
+     PAGINATION
+====================== */
   function renderPagination(total) {
     if (!pagination) return;
 
@@ -116,113 +171,82 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.textContent = i;
       btn.className = i === currentPage ? "active" : "";
 
-      btn.addEventListener("click", () => {
+      btn.onclick = () => {
         currentPage = i;
-        applyFilters();
-      });
+        renderTable();
+      };
 
       pagination.appendChild(btn);
     }
   }
 
-  /* ---------- FILTER & SEARCH ---------- */
-  function applyFilters() {
-    let filtered = [...users];
-
-    const search = searchInput?.value.toLowerCase() || "";
-    if (search) {
-      filtered = filtered.filter(u =>
-        u.name.toLowerCase().includes(search) ||
-        u.email.toLowerCase().includes(search)
-      );
-    }
-
-    if (statusFilter?.value !== "all") {
-      filtered = filtered.filter(
-        u => u.status === statusFilter.value
-      );
-    }
-
-    if (roleFilter?.value !== "all") {
-      filtered = filtered.filter(
-        u => u.role === roleFilter.value
-      );
-    }
-
-    renderTable(filtered);
-  }
-
-  /* ---------- ACTION BUTTONS ---------- */
-  function attachActionHandlers() {
+  /* ======================
+     ACTIONS
+====================== */
+  function attachActions() {
     document.querySelectorAll(".action-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = parseInt(btn.dataset.id);
-        const user = users.find(u => u.id === id);
+      btn.onclick = async () => {
+        const id = btn.dataset.id;
+        const user = users.find(u => u._id === id);
         if (!user) return;
 
         const action = prompt(
-          `Action for ${user.name}:\n1 = View\n2 = Toggle Status\n3 = Delete`
+          `Action for ${user.name}:\n1 = View\n2 = Toggle Status`
         );
 
         if (action === "1") {
           alert(
-            `👤 ${user.name}\nRole: ${user.role}\nDepartment: ${user.department}`
+            `Name: ${user.name}\nRole: ${user.role}\nDepartment: ${user.department || "—"}`
           );
         }
 
         if (action === "2") {
-          user.status =
-            user.status === "active" ? "suspended" : "active";
-          alert(`Status updated to ${user.status}`);
-          applyFilters();
+          await toggleStatus(id);
         }
+      };
+    });
+  }
 
-        if (action === "3") {
-          if (confirm("Are you sure you want to delete this user?")) {
-            users = users.filter(u => u.id !== id);
-            applyFilters();
-          }
+  /* ======================
+     STATUS TOGGLE
+====================== */
+  async function toggleStatus(id) {
+    try {
+      const res = await fetch(`${API}/users/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${TOKEN}`
         }
       });
-    });
+
+      if (!res.ok) throw new Error("Update failed");
+
+      await loadUsers();
+      alert("Status updated successfully");
+
+    } catch (err) {
+      alert("Failed to update status");
+    }
   }
 
-  /* ---------- UTIL ---------- */
-  function capitalize(text) {
-    return text.charAt(0).toUpperCase() + text.slice(1);
+  /* ======================
+     UTIL
+====================== */
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  /* ---------- EVENTS ---------- */
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      currentPage = 1;
-      applyFilters();
-    });
-  }
+  /* ======================
+     EVENTS
+====================== */
+  searchInput?.addEventListener("input", applyFilters);
+  statusFilter?.addEventListener("change", applyFilters);
+  roleFilter?.addEventListener("change", applyFilters);
 
-  if (statusFilter) {
-    statusFilter.addEventListener("change", () => {
-      currentPage = 1;
-      applyFilters();
-    });
-  }
+  /* ======================
+     INIT
+====================== */
+  loadUsers();
+  console.log(" User & Staff Management Loaded Successfully");
 
-  if (roleFilter) {
-    roleFilter.addEventListener("change", () => {
-      currentPage = 1;
-      applyFilters();
-    });
-  }
-
-  /* ---------- BACK BUTTON (SAFE) ---------- */
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      window.history.back();
-    });
-  }
-
-  /* ---------- INITIAL LOAD ---------- */
-  applyFilters();
-
-  console.log(" Staff & User Management JS Loaded Safely");
 });
