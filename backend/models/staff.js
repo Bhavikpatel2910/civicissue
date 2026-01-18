@@ -16,7 +16,14 @@ const staffSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
+      lowercase: true
+    },
+
+    password: {
+      type: String,
+      required: true,
+      select: false   // 🔐 security
     },
 
     department: {
@@ -24,20 +31,10 @@ const staffSchema = new mongoose.Schema(
       required: true
     },
 
-    photo: {
-      type: String, // base64 / URL (future)
-      default: ""
-    },
-
     role: {
       type: String,
       enum: ["staff", "dispatcher", "crew"],
       default: "staff"
-    },
-
-    invitedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Admin"
     },
 
     isActive: {

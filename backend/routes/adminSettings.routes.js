@@ -57,7 +57,8 @@
 // module.exports = router;
 
 import express from "express";
-import authAdmin from "../middleware/authAdmin.js";
+import adminAuth from "../middleware/adminAuth.js";
+
 import {
   getAdminSettings,
   updateAdminSettings,
@@ -66,8 +67,8 @@ import {
 
 const router = express.Router();
 
-router.get("/settings", authAdmin, getAdminSettings);
-router.put("/settings", authAdmin, updateAdminSettings);
-router.put("/change-password", authAdmin, changePassword);
+router.get("/settings", adminAuth, getAdminSettings);
+router.put("/settings", adminAuth, updateAdminSettings);
+router.put("/change-password", adminAuth, changePassword);
 
 export default router;

@@ -1,74 +1,75 @@
-import Issue from "../models/Issue.js";
+import Report from "../models/Report.js";
 
-/* ===============================
-   GET SINGLE ISSUE
-   =============================== */
-export const getIssueById = async (req, res) => {
+/* =========================
+   GET ALL ISSUES
+========================= */
+export const getIssues = async (req, res) => {
   try {
-    const issue = await Issue.findById(req.params.id);
-    if (!issue) {
-      return res.status(404).json({ message: "Issue not found" });
-    }
-    res.json(issue);
+    const issues = await Report.find().sort({ createdAt: -1 });
+    res.json(issues);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Failed to load issues" });
   }
 };
 
-/* ===============================
-   UPDATE ISSUE
-   =============================== */
-export const updateIssue = async (req, res) => {
+/* =========================
+   ASSIGN CREW ✅ (MISSING BEFORE)
+========================= */
+export const assignCrew = async (req, res) => {
   try {
-    const { status, priority, crew } = req.body;
+    const { issueId } = req.params;
+    const { crew, priority } = req.body;
 
-    const issue = await Issue.findById(req.params.id);
+    const issue = await Report.findById(issueId);
     if (!issue) {
       return res.status(404).json({ message: "Issue not found" });
     }
 
-    if (status) issue.status = status;
-    if (priority) issue.priority = priority;
-    if (crew !== undefined) issue.crew = crew;
+    issue.assignedCrew = crew;
+    issue.priority = priority || issue.priority;
+    issue.status = "In Progress";
 
-    issue.activityLog.unshift({
-      message: `Issue updated → Status: ${status}, Priority: ${priority}, Crew: ${crew || "Unassigned"}`
+    issue.timeline = issue.timeline || [];
+    issue.timeline.unshift({
+      status: "Assigned",
+      note: `Assigned to crew: ${crew}`,
+      time: new Date()
     });
 
     await issue.save();
 
-    res.json({
-      message: "Issue updated successfully",
-      issue
-    });
+    res.json({ message: "Crew assigned successfully", issue });
+
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    console.error(err);
+    res.status(500).json({ message: "Failed to assign crew" });
   }
 };
 
-/* ===============================
-   ADD INTERNAL NOTE
-   =============================== */
-export const addIssueNote = async (req, res) => {
+/* =========================
+   RESOLVE ISSUE
+========================= */
+export const resolveIssue = async (req, res) => {
   try {
-    const { note } = req.body;
+    const { issueId } = req.params;
 
-    const issue = await Issue.findById(req.params.id);
+    const issue = await Report.findById(issueId);
     if (!issue) {
       return res.status(404).json({ message: "Issue not found" });
     }
 
-    issue.activityLog.unshift({
-      message: `Internal Note: ${note}`
+    issue.status = "Resolved";
+    issue.timeline.unshift({
+      status: "Resolved",
+      note: "Issue resolved by admin",
+      time: new Date()
     });
 
     await issue.save();
 
-    res.json({
-      message: "Note added",
-      activityLog: issue.activityLog
-    });
+    res.json({ message: "Issue resolved successfully" });
+
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Failed to resolve issue" });
   }
 };

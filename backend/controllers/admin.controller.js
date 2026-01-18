@@ -5,7 +5,7 @@ import Report from "../models/Report.js";
 
 /* =====================================================
    REGISTER ADMIN
-   ===================================================== */
+===================================================== */
 export const registerAdmin = async (req, res) => {
   try {
     const {
@@ -23,10 +23,7 @@ export const registerAdmin = async (req, res) => {
     }
 
     const exists = await Admin.findOne({
-      $or: [
-        { email: email.toLowerCase() },
-        { empId }
-      ]
+      $or: [{ email: email.toLowerCase() }, { empId }]
     });
 
     if (exists) {
@@ -44,12 +41,10 @@ export const registerAdmin = async (req, res) => {
       govId,
       password: hashedPassword,
       role: "admin",
-      isApproved: true // ✅ keep true for now
+      isApproved: true
     });
 
-    res.status(201).json({
-      message: "Admin registered successfully"
-    });
+    res.status(201).json({ message: "Admin registered successfully" });
 
   } catch (err) {
     console.error("REGISTER ADMIN ERROR:", err);
@@ -59,7 +54,7 @@ export const registerAdmin = async (req, res) => {
 
 /* =====================================================
    LOGIN ADMIN
-   ===================================================== */
+===================================================== */
 export const loginAdmin = async (req, res) => {
   try {
     const { empId, email, password } = req.body;
@@ -69,10 +64,7 @@ export const loginAdmin = async (req, res) => {
     }
 
     const admin = await Admin.findOne({
-      $or: [
-        { email: email?.toLowerCase() },
-        { empId }
-      ]
+      $or: [{ email: email?.toLowerCase() }, { empId }]
     });
 
     if (!admin) {
@@ -116,22 +108,93 @@ export const loginAdmin = async (req, res) => {
   }
 };
 
-/* =====================================
-   GET ALL REPORTS (ADMIN DASHBOARD)
-   ===================================== */
+/* =====================================================
+   DASHBOARD KPI STATS (FIXED FOR YOUR DB)
+===================================================== */
+export const getDashboardStats = async (req, res) => {
+  try {
+    // 1️ Total Reports
+    const totalReports = await Report.countDocuments();
+
+    // 2️ Resolved Reports
+    const resolvedReports = await Report.countDocuments({
+      status: { $in: ["Resolved", "Closed"] }
+    });
+
+    // 3️ Avg Resolution Time (SAFE)
+    const avgAgg = await Report.aggregate([
+      {
+        $match: {
+          status: { $in: ["Resolved", "Closed"] },
+          resolvedAt: { $exists: true }
+        }
+      },
+      {
+        $project: {
+          hours: {
+            $divide: [
+              { $subtract: ["$resolvedAt", "$createdAt"] },
+              1000 * 60 * 60
+            ]
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          avgResolution: { $avg: "$hours" }
+        }
+      }
+    ]);
+
+    const avgResolution = avgAgg[0]?.avgResolution
+      ? Number(avgAgg[0].avgResolution.toFixed(1))
+      : 0;
+
+    res.json({
+      totalReports,
+      avgResolution,
+      activeCrews: 0,     // future module
+      satisfaction: 0    // future feedback
+    });
+
+  } catch (err) {
+    console.error("DASHBOARD STATS ERROR:", err);
+    res.status(500).json({ message: "Dashboard stats error" });
+  }
+};
+
+/* =====================================================
+   GET ALL REPORTS (ADMIN MAP + TABLE) – FIXED
+===================================================== */
 export const getAllReports = async (req, res) => {
   try {
     const reports = await Report.find().sort({ createdAt: -1 });
 
-    const formatted = reports.map(r => ({
-      id: r.reportId,
-      title: r.title,
-      zone: r.zone,
-      status: r.status,
-      lat: r.latitude,
-      lng: r.longitude,
-      date: r.createdAt
-    }));
+    const formatted = reports.map(r => {
+      let lat = null;
+      let lng = null;
+
+      // 🔧 Handle BOTH location formats
+      if (typeof r.location === "string") {
+        const parts = r.location.split(",").map(v => Number(v.trim()));
+        lat = parts[0];
+        lng = parts[1];
+      } else if (r.location?.lat && r.location?.lng) {
+        lat = r.location.lat;
+        lng = r.location.lng;
+      }
+
+      return {
+        id: r.reportId || r._id,
+        title: r.title || r.category,
+        category: r.category,
+        status: r.status,
+        lat,
+        lng,
+        date: r.createdAt
+      };
+    });
 
     res.json(formatted);
 

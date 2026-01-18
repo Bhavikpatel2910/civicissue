@@ -3,21 +3,16 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    /* =====================
-       BASIC INFO
-       ===================== */
     name: {
       type: String,
-      required: true,
-      trim: true
+      required: true
     },
 
     email: {
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
-      trim: true
+      lowercase: true
     },
 
     password: {
@@ -25,44 +20,24 @@ const userSchema = new mongoose.Schema(
       required: true
     },
 
-    /* =====================
-       ROLE & ACCESS
-       ===================== */
     role: {
       type: String,
-      enum: ["admin", "dispatcher", "crew", "citizen"],
-      default: "citizen"
-    },
-
-    department: {
-      type: String,
-      default: "—"
+      enum: ["user", "staff", "admin"],
+      default: "user"   // ⭐ AUTO SET
     },
 
     status: {
       type: String,
-      enum: ["active", "suspended"],
-      default: "active"
-    },
-
-    /* =====================
-       ACTIVITY
-       ===================== */
-    lastActive: {
-      type: String,
-      default: "Just now"
+      enum: ["approved", "pending", "blocked"], // ✅ approved allowed
+      default: "approved"
     }
   },
   { timestamps: true }
 );
 
-/* =====================
-   PASSWORD HASHING
-   ===================== */
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 export default mongoose.model("User", userSchema);

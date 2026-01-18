@@ -1,18 +1,15 @@
 import express from "express";
 import adminAuth from "../middleware/adminAuth.js";
 import {
-  getAllIssues,
+  getIssues,
   assignCrew,
   resolveIssue
 } from "../controllers/issue.controller.js";
 
 const router = express.Router();
 
-/* MAP DATA */
-router.get("/", adminAuth, getAllIssues);
-
-/* ACTIONS */
-router.post("/:id/assign", adminAuth, assignCrew);
-router.post("/:id/resolve", adminAuth, resolveIssue);
+router.get("/", adminAuth, getIssues);
+router.patch("/:issueId/assign", adminAuth, assignCrew);
+router.patch("/:issueId/resolve", adminAuth, resolveIssue);
 
 export default router;

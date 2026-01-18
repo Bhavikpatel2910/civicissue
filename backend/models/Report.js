@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 
 const reportSchema = new mongoose.Schema(
   {
-    reportId: {
-      type: String,
-      unique: true
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
 
     title: {
@@ -15,6 +16,16 @@ const reportSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true
+    },
+
+    description: {
+      type: String,
+      required: true
+    },
+
+    media: {
+      type: [String],
+      default: []
     },
 
     location: {
@@ -30,9 +41,13 @@ const reportSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["new", "in-progress", "resolved"],
-      default: "new"
-    }
+      enum: ["Submitted", "In Progress", "Resolved"],
+      default: "Submitted"
+    },
+    createdAt: {
+    type: Date,
+    default: Date.now
+  }
   },
   { timestamps: true }
 );
