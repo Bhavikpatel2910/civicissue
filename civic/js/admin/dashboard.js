@@ -15,6 +15,9 @@ try {
   session = null;
 }
 
+// if (!session || !session.token || session.role !== "admin") {
+//   window.location.replace("/civic/html/auth/adminLogin.html");
+// }
 
 const AUTH_HEADERS = {
   Authorization: `Bearer ${session.token}`

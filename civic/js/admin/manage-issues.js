@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     session = null;
   }
 
+  // if (!session || session.role !== "admin" || !session.token) {
+  //   window.location.replace("/civic/html/auth/adminLogin.html");
+  //   return;
+  // }
 
   const TOKEN = session.token;
   const API_BASE = "http://localhost:5000/api/admin";

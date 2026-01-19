@@ -13,42 +13,63 @@
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/civic/css/user/community.css">
+  <link rel="stylesheet" href="../../css/user/community.css">
 </head>
 
 <body>
 
-<!-- ================= TOP BAR ================= -->
+<!-- ================= HEADER ================= -->
 <header class="topbar">
   <div class="topbar-inner">
 
+    <!-- Brand -->
     <div class="brand">
-      <div class="brand-icon">
-        <span class="material-symbols-outlined">handshake</span>
-      </div>
-      <h2>CivicImpact</h2>
+      <a href="../../html/user/UserDashboard.html" class="brand-link">
+        <img src="../../image/logo1.png" alt="Civic logo">
+      </a>
+      <h2>CityTransparency</h2>
     </div>
 
-    <nav class="main-nav">
-      <a class="active" href="#">Feed</a>
-      <a href="/civic/html/user/ReportIssue.html">Reports</a>
-      <a href="/civic/html/user/">Map</a>
-    </nav>
+    <!-- Right Section -->
+    <div class="right-section">
 
-    <div class="top-actions">
+      <!-- Navigation -->
+      <nav class="nav">
+        <a href="../../html/user/UserDashboard.html" >My Dashboard</a>
+        <a href="../../html/user/ReportIssue.html">Report Issue</a>
+        <a href="../../html/user/CommunityPage.html">Community Board</a>
+        <a href="../../html/user/MyReports.html"> MyReports </a>
+      </nav>
+ <div class="top-actions">
       <div class="search-box">
         <span class="material-symbols-outlined">search</span>
         <input type="text" placeholder="Search neighborhood stories">
       </div>
-      <button class="icon-btn">
-        <span class="material-symbols-outlined">notifications</span>
-      </button>
-      <div class="avatar"></div>
-    </div>
+      <!-- Profile -->
+      <div class="profile dropdown">
+        <!-- Bell -->
+        <a href="../../html/user/notification.html" class="icon-btn">🔔</a>
 
+        <!-- Text -->
+        <div class="profile-text">
+          <div class="role">CIVIC HERO</div>
+          <div class="name">Alex Johnson</div>
+        </div>
+
+        <!-- Avatar -->
+        <div class="avatar" id="avatarBtn">B</div>
+
+        <!-- Dropdown -->
+        <div class="dropdown-menu" id="avatarMenu">
+          <a href="../../html/user/UserProfile.html">My Profile Settings</a>
+          <a href="/logout" class="danger">Logout</a>
+        </div>
+      </div>
+
+    </div>
   </div>
 </header>
-
+   
 <!-- ================= LAYOUT ================= -->
 <main class="layout">
 
@@ -75,11 +96,11 @@
       Settings
     </a>
 
-    <a class="report-btn" href=../../html/user/ReportIssue.html" >
+    <a class="report-btn" href="../../html/user/ReportIssue.html" >
       <span class="material-symbols-outlined">add_circle</span>
      Report Issue
     </a>
-"
+
     <div class="impact-summary">
       <p class="label">My Local Impact</p>
       <div class="impact-count">
@@ -234,7 +255,7 @@
 
 
 <script src="../../js/user/CommunityPage.js"></script>
-
+<script src="../../js/user/userheader.js"></script>
 
 
 </body>

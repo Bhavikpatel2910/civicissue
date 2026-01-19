@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
   ================================= */
   const API_BASE = "http://localhost:5000/api";
 
- 
+  // function redirectToLogin() {
+  //   window.location.replace("/civic/html/auth/index.html");
+  // }
 
   /* ================================
      AUTH CHECK
@@ -125,45 +127,35 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch {}
   }
 
-
   /* ================================
-     SUBMIT REPORT (JSON – FIXED)
+     SUBMIT REPORT   FIXED
   ================================= */
   let isSubmitting = false;
 
   submitBtn?.addEventListener("click", async () => {
     if (isSubmitting) return;
 
-    if (!textarea.value.trim()) {
-      alert("Describe the issue");
-      return;
-    }
-
-    if (!latitude || !longitude) {
-      alert("Waiting for GPS location");
-      return;
-    }
+    if (!textarea.value.trim()) return alert("Describe the issue");
+    if (!latitude || !longitude) return alert("Waiting for GPS");
 
     isSubmitting = true;
     submitBtn.disabled = true;
     submitBtn.innerText = "Submitting...";
 
-    const payload = {
-      title: `${selectedCategory} Issue`,
-      category: selectedCategory,
-      description: textarea.value.trim(),
-      location: `${latitude}, ${longitude}`,
-      priority: "low"
-    };
+    const form = new FormData();
+    form.append("category", selectedCategory);
+    form.append("description", textarea.value);
+    form.append("lat", latitude);
+    form.append("lng", longitude);
+    uploadedFiles.forEach(f => form.append("media", f));
 
     try {
       const res = await fetch(`${API_BASE}/report`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${session.token}`
         },
-        body: JSON.stringify(payload)
+        body: form
       });
 
       if (res.status === 401) {
@@ -172,10 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to submit report");
-      }
+      if (!data.success) throw new Error(data.message);
 
+      localStorage.removeItem("reportDraft");
       window.location.href = "/civic/html/user/CommunityPage.html";
 
     } catch (err) {
@@ -185,13 +176,5 @@ document.addEventListener("DOMContentLoaded", () => {
       isSubmitting = false;
     }
   });
-
-  /* ================================
-     BACK BUTTON
-  ================================= */
-  backBtn?.addEventListener("click", () => {
-    history.back();
-  });
-
 
 });

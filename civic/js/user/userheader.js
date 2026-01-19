@@ -1,32 +1,12 @@
-// Load header component
-fetch("/TEAM-SPARK/civic/components/header.html")
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById("header-root").innerHTML = html;
-    initHeader();
-  });
+const avatarBtn = document.getElementById("avatarBtn");
+    const avatarMenu = document.getElementById("avatarMenu");
 
-function initHeader() {
-
-  // Dropdown toggle
-  document.querySelectorAll("[data-dropdown]").forEach(btn => {
-    btn.addEventListener("click", e => {
+    avatarBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const parent = btn.closest(".dropdown");
-      document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("open"));
-      parent.classList.toggle("open");
+      avatarMenu.style.display =
+        avatarMenu.style.display === "block" ? "none" : "block";
     });
-  });
 
-  document.addEventListener("click", () => {
-    document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("open"));
-  });
-
-  // Active page highlight
-  const current = location.pathname;
-  document.querySelectorAll(".top-nav a").forEach(link => {
-    if (current.includes(link.getAttribute("href"))) {
-      link.classList.add("active");
-    }
-  });
-}
+    document.addEventListener("click", () => {
+      avatarMenu.style.display = "none";
+    });

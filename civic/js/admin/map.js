@@ -1,13 +1,13 @@
 /* =====================================================
-   ADMIN MAP – SMART CITY (LEAFLET | AUTO REFRESH | FIXED)
+   ADMIN MAP – SMART CITY (LEAFLET | BACKEND CONNECTED)
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ===============================
-     AUTH CHECK (SAFE & STRICT)
+     AUTH CHECK (STABLE)
   =============================== */
-  let session = null;
+  let session;
 
   try {
     session = JSON.parse(localStorage.getItem("citizenSession"));
@@ -15,11 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
     session = null;
   }
 
-  if (!session || session.role !== "admin" || !session.token) {
-    localStorage.removeItem("citizenSession");
-    window.location.replace("/civic/html/auth/adminLogin.html");
-    return;
-  }
+  // if (!session || session.role !== "admin" || !session.token) {
+  //   window.location.replace("/civic/html/auth/adminLogin.html");
+  //   return;
+  // }
 
   const TOKEN = session.token;
   const API_BASE = "http://localhost:5000/api/admin";
@@ -35,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const map = L.map("map", {
     zoomControl: true,
     attributionControl: true
-  }).setView([22.9734, 78.6569], 5); // India
+  }).setView([22.9734, 78.6569], 5);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
@@ -80,6 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (err) {
       console.error("MAP LOAD ERROR:", err.message);
+      alert("Unable to load city issues on map");
     }
   }
 
@@ -89,9 +89,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderMarkers(issues) {
     markerLayer.clearLayers();
 
+    if (!issues.length) {
+      console.warn("No issues to display on map");
+      return;
+    }
+
     issues.forEach(issue => {
       const lat = issue.latitude ?? issue.lat;
       const lng = issue.longitude ?? issue.lng;
+
       if (!lat || !lng) return;
 
       const status = (issue.status || "info").toLowerCase();
@@ -119,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ${issue.title || "Reported Issue"}
         </h3>
         <p>${issue.description || ""}</p>
-        <strong>${issue.location || "Unknown"}</strong><br>
+        <strong> ${issue.location || "Unknown"}</strong><br>
         <small>Status: ${(issue.status || "info").toUpperCase()}</small>
         <hr>
         <button onclick="window.__assignCrew('${issue._id}')">🚧 Assign Crew</button>
@@ -146,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!res.ok) throw new Error();
+
       alert("Crew assigned");
       loadIssues();
 
@@ -164,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!res.ok) throw new Error();
+
       alert("Issue resolved");
       loadIssues();
 
@@ -211,29 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 5000);
 
   /* ===============================
-     AUTO REFRESH (30s)
-  =============================== */
-  const REFRESH_INTERVAL = 30000;
-  let refreshTimer = null;
-
-  function startAutoRefresh() {
-    loadIssues();
-    refreshTimer = setInterval(loadIssues, REFRESH_INTERVAL);
-    console.log("🟢 Map auto-refresh enabled (30s)");
-  }
-
-  function stopAutoRefresh() {
-    if (refreshTimer) {
-      clearInterval(refreshTimer);
-      refreshTimer = null;
-    }
-  }
-
-  document.addEventListener("visibilitychange", () => {
-    document.hidden ? stopAutoRefresh() : startAutoRefresh();
-  });
-
-  /* ===============================
      FORCE LOGOUT
   =============================== */
   function forceLogout() {
@@ -244,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===============================
      INIT
   =============================== */
-  startAutoRefresh();
-  console.log("Admin Smart City Map Loaded (Auto-refresh ON)");
+  loadIssues();
+  console.log(" Admin Smart City Map Loaded");
 
 });

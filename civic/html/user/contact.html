@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact 311</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    .info {
+      background: #eef2ff;
+      padding: 15px;
+      border-left: 4px solid #4f46e5;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    form {
+      margin-top: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      background: #4f46e5;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+
+    .emergency {
+      margin-top: 25px;
+      color: #b91c1c;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Contact 311</h1>
+    <p>
+      311 is a non-emergency service that helps citizens connect with city
+      departments for information, complaints, and service requests.
+    </p>
+
+    <div class="info">
+      <strong>You can use 311 for:</strong>
+      <ul>
+        <li>Road, streetlight, or drainage issues</li>
+        <li>Garbage collection complaints</li>
+        <li>Water supply problems</li>
+        <li>Public facility maintenance</li>
+        <li>General city service information</li>
+      </ul>
+    </div>
+
+    <form>
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="Enter your email" required />
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" placeholder="Enter your phone number" />
+
+      <label for="message">Your Issue / Request</label>
+      <textarea id="message" placeholder="Describe your issue in detail" required></textarea>
+
+      <button type="submit">Submit Request</button>
+    </form>
+
+    <p class="emergency">
+      Note: For emergencies, please call 112 immediately. Do not use 311 for urgent situations.
+    </p>
+  </div>
+
+</body>
+</html>

@@ -9,23 +9,51 @@
 </head>
 <body>
 
+<!-- ================= HEADER ================= -->
 <header class="topbar">
   <div class="topbar-inner">
+
+    <!-- Brand -->
     <div class="brand">
-      <span class="icon">🏙️</span>
-      <h1>CivicReport</h1>
+      <a href="../../html/user/UserDashboard.html" class="brand-link">
+        <img src="../../image/logo1.png" alt="Civic logo">
+      </a>
+      <h2>CityTransparency</h2>
     </div>
 
-    <nav class="nav">
-      <a href="/civic/html/user/UserDashboard.html">Dashboard</a>
-      <a href="/civic/html/user/ReportIssue.html">Reports</a>
-      <a href="/civic/html/user/CommunityPage.html">Community</a>
-      <a class="active" href="/civic/html/user/UserProfile.html">Profile</a>
-    </nav>
+    <!-- Right Section -->
+    <div class="right-section">
 
-    <div class="header-right">
-      <input type="text" placeholder="Search reports…">
-      <div class="avatar"></div>
+      <!-- Navigation -->
+      <nav class="nav">
+        <a href="../../html/user/UserDashboard.html" >My Dashboard</a>
+        <a href="../../html/user/ReportIssue.html">Report Issue</a>
+        <a href="../../html/user/CommunityPage.html">Community Board</a>
+        <a href="../../html/user/MyReports.html"> MyReports </a>
+      </nav>
+    
+      
+      <!-- Profile -->
+      <div class="profile dropdown">
+        <!-- Bell -->
+        <a href="../../html/user/notification.html" class="icon-btn">🔔</a>
+
+        <!-- Text -->
+        <div class="profile-text">
+          <div class="role">CIVIC HERO</div>
+          <div class="name">Alex Johnson</div>
+        </div>
+
+        <!-- Avatar -->
+        <div class="avatar" id="avatarBtn">B</div>
+
+        <!-- Dropdown -->
+        <div class="dropdown-menu" id="avatarMenu">
+          <a href="../../html/user/UserProfile.html">My Profile Settings</a>
+          <a href="/logout" class="danger">Logout</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </header>
@@ -44,8 +72,8 @@
     </div>
 
     <div class="profile-actions">
-      <button class="primary">New Report</button>
-      <button class="secondary">Edit Profile</button>
+      <a href="../../html/user/ReportIssue.html" class="primary">    New Report</a>
+      <a href="../../html/user/UserProfile.html" class="secondary">Edit Profile</a>
     </div>
   </section>
 
@@ -73,8 +101,7 @@
       <div class="tabs">
         <button class="tab active">Achievements</button>
         <button class="tab">Contributions</button>
-        <button class="tab">Neighborhood Impact</button>
-      </div>
+        </div>
 
       <div class="badges">
         <div class="badge-card">
@@ -119,6 +146,8 @@
   © 2024 CivicReport. Empowering communities together.
 </footer>
 
+
+<script src="../../js/user/userheader.js"></script>
 <script src="../../js/user/profile.js"></script>
 </body>
 </html>

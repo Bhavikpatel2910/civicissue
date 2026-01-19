@@ -57,29 +57,52 @@
     class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-solid border-[#f0f3f4] dark:border-white/10 px-4 md:px-10 py-3">
     <div class="max-w-[1200px] mx-auto flex items-center justify-between whitespace-nowrap">
       <div class="flex items-center gap-3 text-[#111618] dark:text-white">
-        <div class="flex items-center justify-center bg-primary rounded-lg p-1.5 text-white">
-          <span class="material-symbols-outlined">location_city</span>
-        </div>
+        <a href="../../html/user/UserDashboard.html"
+          class="flex items-center hover:opacity-90 transition-opacity hover:scale-105 transition-transform">
+          <img src="../../image/logo1.png" alt="Civic logo" class="h-14 w-14 object-contain" />
+        </a>
+
+
         <h2 class="text-lg font-bold leading-tight tracking-[-0.015em] font-display">CityTransparency</h2>
       </div>
       <div class="flex flex-1 justify-end gap-8 items-center">
         <nav class="hidden md:flex items-center gap-9">
           <a class="text-sm font-medium hover:text-primary transition-colors text-primary" href="#">My Dashboard</a>
-          <a class="text-sm font-medium hover:text-primary transition-colors" href="/civic/html/user/ReportIssue.html">Report Issue</a>
-          <a class="text-sm font-medium hover:text-primary transition-colors" href="/civic/html/user/CommunityPage.html">Community Board</a>
+          <a class="text-sm font-medium hover:text-primary transition-colors"
+            href="../../html/user/ReportIssue.html">Report Issue</a>
+          <a class="text-sm font-medium hover:text-primary transition-colors"
+            href="../../html/user/CommunityPage.html">Community Board</a>
+             <a class="text-sm font-medium hover:text-primary transition-colors"
+            href="../../html/user/MyReports.html"> MyReports </a>
         </nav>
+
+
         <div class="flex items-center gap-4 border-l border-gray-200 dark:border-white/10 pl-8">
-          <div class="text-right hidden sm:block">
-            <p class="text-xs font-bold text-gray-400 uppercase">Civic Hero</p>
-            <p class="text-sm font-bold">Alex Johnson</p>
-          </div>
-          <div class="w-10 h-10 rounded-full bg-primary/20 border-2 border-primary overflow-hidden">
-            <img alt="Profile" class="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIXGhQPt3eCXznlXKZt8Qa_gXNVsIdBiQeBtpGirzy-9eTcw0fDzvsnpPVFwQGOIl38j5zNsqkf5xCZkWU1pH0-OjMHRUAlbKtpSTn6lWtBfaW0Sj69ZwAdY2Kfm7g_QHYDmW7qx8F6DoPGFhWUEqFDOQR9cVkuVvgtXOomLkFjCX61u-8cO9apGihWx3g5QDXt38Kdr0olVuagOS2S99nPwNwiJ0XDzRsxDfxEGo4MtfTvnMg6OYPQfWZikWJTHqyOmBnFSDqu8Y1" />
+          <div class="actions">
+            <div class="profile dropdown">
+              <!-- Bell -->
+              <button class="icon-btn"><a href="../../html/user/notification.html">🔔 </a></button>
+
+              <!-- Text -->
+              <div class="profile-text">
+                <div class="role">CIVIC HERO</div>
+                <div class="name">Alex Johnson</div>
+              </div>
+
+              <!-- Avatar -->
+              <div class="avatar" id="avatarBtn">B</div>
+
+              <!-- Dropdown menu -->
+              <div class="dropdown-menu" id="avatarMenu">
+                <a href="../../html/user/UserProfile.html">My Profile Settings</a>
+                <a href="/logout" class="danger">Logout</a>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
-    </div>
   </header>
   <main class="max-w-[1200px] mx-auto px-4 py-8">
     <section class="mb-8">
@@ -170,7 +193,8 @@
       <div class="lg:col-span-2 space-y-6">
         <div class="flex items-center justify-between px-2">
           <h2 class="text-2xl font-bold">My Recent Activity</h2>
-          <a href="/civic/html/user/MyReports.html" class="text-sm font-bold text-primary hover:underline">View all reports</>
+          <a href="../../html/user/MyReports.html" class="text-sm font-bold text-primary hover:underline">View all
+            reports</>
         </div>
         <div
           class="bg-white dark:bg-background-dark rounded-2xl border border-[#dbe3e6] dark:border-white/10 overflow-hidden">
@@ -249,11 +273,24 @@
             </div>
           </div>
         </div>
-        <a href="/civic/html/user/ReportIssue.html"
-          class="w-full py-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-white/10 text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center justify-center gap-2">
-          <span class="material-symbols-outlined">add_circle</span>
+        <a href="../../html/user/ReportIssue.html" class="w-full py-4 rounded-xl border-2 border-dashed border-gray-200 dark:border-white/10
+         text-gray-500 font-bold
+         flex items-center justify-center gap-2
+         transition-all duration-200
+         hover:border-blue-500
+         hover:text-blue-600
+         hover:bg-blue-50
+         hover:shadow-md hover:-translate-y-0.5
+
+         dark:hover:bg-blue-500/10">
+
+          <span class="material-symbols-outlined transition-colors group-hover:text-blue-600">
+            add_circle
+          </span>
+
           Report a New Issue
         </a>
+
       </div>
       <div class="space-y-8">
         <section>
@@ -374,31 +411,43 @@
       <div>
         <h4 class="font-bold mb-4">User Portal</h4>
         <ul class="flex flex-col gap-2 text-sm text-gray-500">
-          <li><a class="hover:text-primary" href="/civic/html/setting/user/account setting.html">My Profile Settings</a></li>
-          <li><a class="hover:text-primary" href="/civic/html/setting/user/Settings.html">Notification Prefs</a></li>
-          <li><a class="hover:text-primary" href="/civic/html/user/reportprogress.html">Impact History</a></li>
-          <li><a class="hover:text-primary" href="#">Leaderboards</a></li>
+          <li><a class="hover:text-primary" href="../../html/setting/user/account setting.html">My Profile Settings</a></li>
+          <li><a class="hover:text-primary" href="../../html/setting/user/Settings.html">Notification Prefs</a></li>
+          <li><a class="hover:text-primary" href="../../html/user/reportprogress.html">Impact History</a></li>
+
         </ul>
       </div>
       <div>
         <h4 class="font-bold mb-4">Help &amp; Support</h4>
         <ul class="flex flex-col gap-2 text-sm text-gray-500">
-          <li><a class="hover:text-primary" href="#">Filing Guidelines</a></li>
-          <li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
-          <li><a class="hover:text-primary" href="#">Contact 311</a></li>
+          <li><a class="hover:text-primary" href="../../html/user/Terms&conditions.html">Terms&conditions</a></li>
+          <li><a class="hover:text-primary" href="../../html/user/Privacy Policy.html">Privacy Policy</a></li>
+          <li><a class="hover:text-primary" href="../../html/user/contact.html">Contact</a></li>
         </ul>
       </div>
     </div>
     <div
       class="max-w-[1200px] mx-auto px-4 mt-12 pt-8 border-t border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-400">
       <p>© 2024 CityTransparency Citizen Dashboard.</p>
-      <div class="flex gap-6">
-        <a class="hover:text-primary" href="#">System Status</a>
-        <a class="hover:text-primary" href="#">API Feedback</a>
-      </div>
+
     </div>
   </footer>
-<script src="../../js/user/UserDashboard.js"></script>
+  <script src="../../js/user/UserDashboard.js"></script>
+  <script>
+    const avatarBtn = document.getElementById("avatarBtn");
+    const avatarMenu = document.getElementById("avatarMenu");
+
+    avatarBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      avatarMenu.style.display =
+        avatarMenu.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", () => {
+      avatarMenu.style.display = "none";
+    });
+  </script>
+
 </body>
 
 </html>

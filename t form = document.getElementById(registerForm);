@@ -1,0 +1,32 @@
+[33mcommit d7fd4f11d2d8f71b9ed1fa1ef1a2b389a89a2e9c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: ARYAN BHOYA <aryanbhoya01@gmail.com>
+Date:   Tue Jan 20 01:00:41 2026 +0530
+
+    file is add
+
+[1mdiff --git a/civic/js/auth/Register.js b/civic/js/auth/Register.js[m
+[1mindex 755cdf5..c51b410 100644[m
+[1m--- a/civic/js/auth/Register.js[m
+[1m+++ b/civic/js/auth/Register.js[m
+[36m@@ -89,15 +89,12 @@[m [mform.addEventListener("submit", async e => {[m
+   btnText.textContent = "Creating Account...";[m
+ [m
+   try {[m
+[31m-    const res = await fetch(`${API_BASE}/register`, {[m
+[31m-      method: "POST",[m
+[31m-      headers: { "Content-Type": "application/json" },[m
+[31m-      body: JSON.stringify({[m
+[31m-        name,[m
+[31m-        email,[m
+[31m-        password[m
+[31m-      })[m
+[31m-    });[m
+[32m+[m[32m   fetch("https://team-spark-1.onrender.com/register", {[m[41m[m
+[32m+[m[32m  method: "POST",[m[41m[m
+[32m+[m[32m  headers: { "Content-Type": "application/json" },[m[41m[m
+[32m+[m[32m  body: JSON.stringify({ name: "test" })[m[41m[m
+[32m+[m[32m});[m[41m[m
+[32m+[m[41m  [m
+ [m
+     const data = await res.json();[m
+ [m
