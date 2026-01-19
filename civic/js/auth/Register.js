@@ -89,15 +89,12 @@ form.addEventListener("submit", async e => {
   btnText.textContent = "Creating Account...";
 
   try {
-    const res = await fetch(`${API_BASE}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email,
-        password
-      })
-    });
+   fetch("https://team-spark-1.onrender.com/register", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "test" })
+});
+  
 
     const data = await res.json();
 
