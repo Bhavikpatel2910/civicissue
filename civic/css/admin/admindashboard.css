@@ -1,6 +1,3 @@
-/* =========================
-   GLOBAL RESET
-========================= */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,24 +5,17 @@
   font-family: "Space Grotesk", sans-serif;
 }
 
-html, body {
-  height: 100%;
+body {
   background: #0b0f14;
   color: #e5e7eb;
 }
 
-/* =========================
-   APP LAYOUT
-========================= */
 .app {
   display: flex;
   height: 100vh;
-  overflow: hidden;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* Sidebar */
 .sidebar {
   width: 260px;
   background: #151e2b;
@@ -55,7 +45,6 @@ nav a {
   border-radius: 8px;
   color: #94a3b8;
   cursor: pointer;
-  text-decoration: none;
 }
 
 nav a.active,
@@ -68,7 +57,6 @@ nav a:hover {
   margin-top: auto;
   display: flex;
   gap: 10px;
-  cursor: pointer;
 }
 
 .avatar {
@@ -78,14 +66,11 @@ nav a:hover {
   background: #334155;
 }
 
-/* =========================
-   MAIN CONTENT
-========================= */
+/* Main */
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .topbar {
@@ -113,17 +98,13 @@ main {
   outline: none;
 }
 
-/* =========================
-   CONTENT AREA
-========================= */
+/* Content */
 .content {
   padding: 16px;
   overflow-y: auto;
 }
 
-/* =========================
-   KPI CARDS
-========================= */
+/* KPIs */
 .kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
@@ -136,9 +117,7 @@ main {
   border-radius: 12px;
 }
 
-/* =========================
-   GRID
-========================= */
+/* Grid */
 .grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -146,9 +125,7 @@ main {
   margin-top: 16px;
 }
 
-/* =========================
-   DASHBOARD MAP
-========================= */
+/* Map */
 .map-wrapper {
   position: relative;
   background: #0a0d11;
@@ -157,13 +134,11 @@ main {
   min-height: 420px;
 }
 
-/* DASHBOARD MAP ONLY */
-.map-wrapper #map {
+#map {
   width: 100%;
   height: 100%;
 }
 
-/* MAP FILTER BUTTONS */
 .map-filters {
   position: absolute;
   top: 12px;
@@ -187,9 +162,7 @@ main {
   color: white;
 }
 
-/* =========================
-   ACTIONS PANEL
-========================= */
+/* Actions */
 .actions {
   background: #151e2b;
   border-radius: 12px;
@@ -210,9 +183,7 @@ main {
   cursor: pointer;
 }
 
-/* =========================
-   SYSTEM HEALTH
-========================= */
+/* Health */
 .health {
   background: #151e2b;
   margin-top: 16px;
@@ -232,9 +203,7 @@ main {
   background: rgba(38,166,156,.3);
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* Mobile */
 .hamburger {
   display: none;
   cursor: pointer;
@@ -263,22 +232,4 @@ main {
   .hamburger {
     display: block;
   }
-}
-
-/* =========================
-   FULL PAGE MAP (ADMIN MAP PAGE)
-========================= */
-body.admin-map-page #map {
-  width: 100%;
-  height: 100vh;
-}
-
-body.admin-map-page .map-header {
-  height: 56px;
-  background: #111827;
-  color: #fff;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
 }

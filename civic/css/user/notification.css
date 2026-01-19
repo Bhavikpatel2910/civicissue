@@ -259,3 +259,20 @@ body {
     display: none;
   }
 }
+.back-btn {
+  background: none;
+  border: 1px solid #dbe3e6;
+  color: #111618;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-btn:hover {
+  background: #f6f8f8;
+}

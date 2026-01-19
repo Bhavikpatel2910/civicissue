@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
     session = null;
   }
 
+  // if (!session || !session.token || session.role !== "admin") {
+  //   window.location.replace("/civic/html/auth/adminLogin.html");
+  //   return;
+  // }
 
   const authHeaders = {
     Authorization: `Bearer ${session.token}`,

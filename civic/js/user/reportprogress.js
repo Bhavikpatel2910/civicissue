@@ -4,9 +4,9 @@ console.log("CityFix timeline page loaded");
 // AUTH CHECK
 // =============================
 const session = JSON.parse(localStorage.getItem("citizenSession"));
-if (!session) {
-  window.location.href = "/civic/html/auth/LoginPage.html";
-}
+// if (!session) {
+//   window.location.href = "/civic/html/auth/LoginPage.html";
+// }
 
 // =============================
 // MOCK DATA (Replace with API later)

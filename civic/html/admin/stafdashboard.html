@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Field Staff Operational Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#002e4c",
+                        "accent-orange": "#FF6F00",
+                        "background-light": "#fcfcfd",
+                        "background-dark": "#0e1d2a",
+                        "card-bg": "#162533",
+                        "border-gray": "#27323a"
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: "Public Sans", sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .safety-gradient {
+            background: linear-gradient(135deg, #FF6F00 0%, #E65100 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-white min-h-screen font-display">
+    <!-- Top Navigation Bar -->
+    <header
+        class="flex items-center justify-between border-b border-solid border-border-gray px-6 py-3 bg-background-dark sticky top-0 z-50">
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3">
+                <div class="size-8 bg-accent-orange flex items-center justify-center rounded">
+                    <span class="material-symbols-outlined text-white">construction</span>
+                </div>
+                <h2 class="text-white text-xl font-800 leading-tight tracking-tight uppercase">CivicOps <span
+                        class="text-accent-orange">Field</span></h2>
+            </div>
+            <nav class="hidden md:flex items-center gap-6">
+                <a class="text-white text-sm font-bold uppercase tracking-wider border-b-2 border-accent-orange pb-1"
+                    href="#">Dashboard</a>
+                <a class="text-[#9aaebc] hover:text-white text-sm font-medium transition-colors" href="#">Work
+                    Orders</a>
+                <a class="text-[#9aaebc] hover:text-white text-sm font-medium transition-colors" href="#">Inventory</a>
+                <a class="text-[#9aaebc] hover:text-white text-sm font-medium transition-colors" href="#">Fleet</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2 bg-[#1b2a38] px-3 py-1.5 rounded border border-border-gray">
+                <span class="material-symbols-outlined text-[#FFD600] text-xl">wb_sunny</span>
+                <span class="text-sm font-bold">72°F <span class="font-normal text-[#9aaebc] ml-1">Sunny</span></span>
+            </div>
+            <div class="flex items-center gap-4 border-l border-border-gray pl-6">
+                <div class="text-right">
+                    <p class="text-xs text-[#9aaebc] font-medium uppercase tracking-tighter">Field Tech</p>
+                    <p class="text-sm font-bold">Marcus Chen</p>
+                </div>
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary"
+                    data-alt="Close up portrait of field maintenance staff member"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCjc3d7WGyVMjWmlEhG7d8ImkWeHORl7W7ne5c69GP7F0VILNrQTLZN4RmWMNUxeZ862dTqZCHXM4PAFY0miy-hxx-GOUoe82ddvzfqdnaH8InkCdfQkTBXGkxCaKqzRGmFIkM0F2CPDDn6nwnrJwQ9Q6xaerdsFbky09KZBfCqDXKIfW94BFRn6v8ckFWRJReImoASxSHQZ39i5o3nPN-hrUnvTx0Ry9TmcoTiNjfCTYIH6rkuymFtnU0j8A7g2z_lTESesdVmZnbD");'>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-[1440px] mx-auto p-6 grid grid-cols-12 gap-6">
+        <!-- Shift Timer & Metrics Bar -->
+        <div class="col-span-12 flex flex-col gap-6">
+            <!-- Active Shift Status -->
+            <div
+                class="bg-card-bg border-l-4 border-accent-orange p-6 flex items-center justify-between rounded shadow-xl">
+                <div>
+                    <h3 class="text-[#9aaebc] text-xs font-bold uppercase tracking-widest mb-1">Active Shift Duration
+                    </h3>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <p class="text-3xl font-800 tracking-tighter">04</p>
+                            <p class="text-[10px] text-[#9aaebc] uppercase font-bold">Hrs</p>
+                        </div>
+                        <p class="text-3xl font-800 text-accent-orange">:</p>
+                        <div class="flex flex-col items-center">
+                            <p class="text-3xl font-800 tracking-tighter">12</p>
+                            <p class="text-[10px] text-[#9aaebc] uppercase font-bold">Min</p>
+                        </div>
+                        <p class="text-3xl font-800 text-accent-orange">:</p>
+                        <div class="flex flex-col items-center">
+                            <p class="text-3xl font-800 tracking-tighter text-[#9aaebc]">00</p>
+                            <p class="text-[10px] text-[#9aaebc] uppercase font-bold">Sec</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        class="bg-[#27323a] hover:bg-[#32404b] text-white px-6 py-3 rounded font-bold text-sm uppercase transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">pause_circle</span> Break
+                    </button>
+                    <button
+                        class="bg-primary hover:bg-[#003e66] text-white px-6 py-3 rounded font-bold text-sm uppercase border border-primary transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">logout</span> Clock Out
+                    </button>
+                </div>
+            </div>
+            <!-- Current Priority Task -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-white text-xl font-bold uppercase tracking-tight flex items-center gap-2">
+                        <span class="material-symbols-outlined text-accent-orange">priority_high</span>
+                        Current Priority Task
+                    </h2>
+                    <span
+                        class="bg-accent-orange/10 text-accent-orange text-[10px] font-900 px-2 py-1 rounded uppercase tracking-tighter border border-accent-orange/30">Urgent</span>
+                </div>
+                <div class="bg-card-bg rounded-xl overflow-hidden border border-border-gray shadow-2xl">
+                    <div class="grid md:grid-cols-2">
+                        <div class="relative h-64 md:h-auto bg-[#1b2228]">
+                            <div class="absolute inset-0 bg-center bg-cover"
+                                data-alt="High contrast city map showing water main location and traffic route"
+                                data-location="Chicago"
+                                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD5zv2g4XJwVZcYPn-32hDE03mfAg2DpobyJlb4momPJgc8paPDKnPmCgZe_GCdOBQc1VAYLZ57sYveiIRco_wrCtnT2zWTFdponDaWih9IXPJ-TYZudQbGXAuKJkMfeeCNAMsLxf7j7fHqk5dtyEAecTGggWxHE24l8mJFm6iHp6FhO0_5cVFT1zvSLIfktf0303qBIXzVPxKCoEB9QwYsQMcVSeLjms148QdhMiVXdMpctp4K3MCViqILZcr4y7uvQGJyC6nNjKLE");'>
+                            </div>
+                            <div
+                                class="absolute top-4 left-4 bg-background-dark/80 backdrop-blur-md p-3 rounded border border-border-gray">
+                                <p class="text-[10px] text-[#9aaebc] uppercase font-bold">Estimated Travel</p>
+                                <p class="text-lg font-bold">12 Mins</p>
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-2xl font-800 mb-2 leading-tight">Water Main Leak - 123 Maple St</h3>
+                                <p class="text-[#9aaebc] text-base mb-6 leading-relaxed">System pressure drop detected
+                                    in Zone 4. Immediate intervention required to prevent pavement erosion. Service
+                                    shut-off required for 12 residential units.</p>
+                                <div class="space-y-3 mb-8">
+                                    <div class="flex items-center gap-3 text-sm">
+                                        <span class="material-symbols-outlined text-accent-orange">location_on</span>
+                                        <span>Northwest Quadrant, Sector G</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-sm">
+                                        <span class="material-symbols-outlined text-accent-orange">report_problem</span>
+                                        <span>Issue Level: Critical (Category 1)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                class="safety-gradient w-full py-5 rounded-lg text-white font-900 uppercase tracking-widest text-lg shadow-lg hover:scale-[1.01] transition-transform active:scale-95 flex items-center justify-center gap-3">
+                                <span class="material-symbols-outlined text-2xl">play_arrow</span>
+                                Begin Work Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Summary Widgets Grid -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-card-bg p-5 rounded border border-border-gray flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-bold uppercase text-[#9aaebc] tracking-widest">Tasks Completed</h4>
+                        <span class="material-symbols-outlined text-blue-400">check_circle</span>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-800">4 <span class="text-lg text-[#9aaebc] font-normal">/ 6</span></p>
+                        <div class="w-full bg-border-gray h-1.5 mt-3 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-[66%]"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card-bg p-5 rounded border border-border-gray flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-bold uppercase text-[#9aaebc] tracking-widest">Zone Load</h4>
+                        <span class="material-symbols-outlined text-yellow-500">pending_actions</span>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-800">12 <span class="text-lg text-[#9aaebc] font-normal">Active</span>
+                        </p>
+                        <p class="text-xs text-[#9aaebc] mt-2">+3 from morning shift</p>
+                    </div>
+                </div>
+                <div class="bg-card-bg p-5 rounded border border-border-gray flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-bold uppercase text-[#9aaebc] tracking-widest">Team Messages</h4>
+                        <span class="material-symbols-outlined text-accent-orange">mail</span>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-800">2 <span
+                                class="text-lg text-accent-orange font-bold uppercase">New</span></p>
+                        <p class="text-xs text-[#9aaebc] mt-2">Latest from Dispatch</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Global Emergency Bar (Hidden normally, shows in serious alerts) -->
+    <div
+        class="fixed bottom-0 left-0 right-0 bg-red-600 text-white px-6 py-2 flex items-center justify-center gap-4 z-[100]">
+        <span class="material-symbols-outlined animate-pulse">warning</span>
+        <p class="text-sm font-bold uppercase tracking-widest">Severe Weather Alert: Heavy storms expected in Zone 4
+            after 16:00. Plan routes accordingly.</p>
+    </div>
+
+<script src="../../js/admin/stafdashboard.js"></script>
+</body>
+
+</html>

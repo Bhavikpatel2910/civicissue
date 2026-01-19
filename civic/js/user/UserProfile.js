@@ -17,7 +17,10 @@ const profilePic = document.querySelector(".profile-pic");
 const badgesContainer = document.querySelector(".badges");
 
 // Get token
-
+const session = JSON.parse(localStorage.getItem("session"));
+// if (!session || !session.token) {
+//   window.location.href = "/civic/html/auth/Login.html";
+// }
 
 // Attach token
 const authHeaders = {

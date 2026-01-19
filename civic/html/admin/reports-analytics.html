@@ -22,7 +22,7 @@
 
 <header class="topbar">
   <div class="left">
-    <a href="/civic/html/admin/AdminDashboard.html" class="btn-back">
+    <a href="../../html/admin/AdminDashboard.html" class="btn-back">
       <span class="material-symbols-outlined">arrow_back</span>
       Dashboard
     </a>
@@ -45,20 +45,8 @@
     </div>
 
     <div class="chart-card">
-      
-  <div class="filters-department">
-  select id="statusFilter">
-    <h3>Reports by Department</h3>
-  <canvas id="departmentChart"></canvas>
-  <option value="all">All Departments</option>
-  <option value="Public Works">Public Works</option>
-  <option value="Sanitation">Sanitation</option>
-  <option value="Water Supply">Water Supply</option>
-  <option value="Electricity">Electricity</option>
-</select>
-
-  </div>
-
+      <h3>Reports by Status</h3>
+      <canvas id="statusChart"></canvas>
     </div>
   </section>
 
@@ -85,7 +73,7 @@
 
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="../../js/admin/reports-analytics.js"></script>
 </body>
 </html>

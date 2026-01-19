@@ -1,214 +1,229 @@
 /* =====================================================
-   REPORT ANALYTICS – ADMIN (TRULY STABLE VERSION)
+   REPORTS – ADMIN ANALYTICS (FINAL | FIXED)
 ===================================================== */
 
+/* ======================
+   AUTH GUARD
+====================== */
+let session = null;
+
+try {
+  session = JSON.parse(localStorage.getItem("citizenSession"));
+} catch {
+  session = null;
+}
+
+// if (!session || session.role !== "admin" || !session.token) {
+//   window.location.replace("/civic/html/auth/adminLogin.html");
+// }
+
+/* ======================
+   DOM READY
+====================== */
 document.addEventListener("DOMContentLoaded", () => {
-
-  /* ======================
-     AUTH
-  ====================== */
-  let session;
-  try {
-    session = JSON.parse(localStorage.getItem("citizenSession"));
-  } catch {}
-
-  if (!session?.token) {
-    window.location.replace("/civic/html/auth/adminLogin.html");
-    return;
-  }
 
   const TOKEN = session.token;
   const API = "http://localhost:5000/api/admin";
 
-  /* ======================
-     ELEMENTS
-  ====================== */
-  const zoneCanvas = document.getElementById("zoneChart");
-  const statusCanvas = document.getElementById("statusChart");
-  const deptCanvas = document.getElementById("departmentChart");
+  /* ---------- ELEMENTS ---------- */
   const tableBody = document.getElementById("reportTable");
+  const mapView = document.getElementById("mapView");
+  const listView = document.getElementById("listView");
 
-  if (!zoneCanvas && !statusCanvas && !deptCanvas) {
-    console.warn("No chart canvas found");
-    return;
-  }
+  const mapBtn = document.getElementById("mapBtn");
+  const listBtn = document.getElementById("listBtn");
 
-  /* 🔒 LOCK CANVAS SIZE (CRITICAL) */
-  [zoneCanvas, statusCanvas, deptCanvas].forEach(c => {
-    if (c) {
-      c.width = 420;
-      c.height = 260;
-    }
-  });
+  const zoneChartEl = document.getElementById("zoneChart");
+  const statusChartEl = document.getElementById("statusChart");
 
   let reports = [];
-  let lastDataHash = "";
-
+  let map = null;
+  let markerLayer = null;
   let zoneChart = null;
   let statusChart = null;
-  let deptChart = null;
 
   /* ======================
      FETCH REPORTS
-  ====================== */
-  async function fetchReports() {
+====================== */
+  async function loadReports() {
     try {
       const res = await fetch(`${API}/reports`, {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: {
+          Authorization: `Bearer ${TOKEN}`
+        }
       });
+
+      if (res.status === 401) {
+        localStorage.removeItem("citizenSession");
+        window.location.replace("/civic/html/auth/adminLogin.html");
+        return;
+      }
 
       if (!res.ok) throw new Error("Fetch failed");
 
-      const data = await res.json();
-      const hash = JSON.stringify(data.map(r => r._id + r.status));
+      reports = await res.json();
 
-      // ⛔ NO DATA CHANGE → NO UPDATE
-      if (hash === lastDataHash) return;
-
-      lastDataHash = hash;
-      reports = normalize(data);
-
+      normalizeReports();
       renderTable();
-      updateCharts();
+      renderCharts();
+      initMap();
 
     } catch (err) {
-      console.error("Analytics fetch error:", err.message);
+      console.error("REPORT ANALYTICS ERROR:", err);
+      alert("Unable to load reports analytics");
     }
   }
 
   /* ======================
-     NORMALIZE
-  ====================== */
-  function normalize(data) {
-    return data.map(r => ({
+     NORMALIZE DATA
+====================== */
+  function normalizeReports() {
+    reports = reports.map(r => ({
       ...r,
-      zone: r.zone || r.area || "General",
-      department: r.department || "Unassigned",
-      status: (r.status || "Unknown").trim()
+      status: (r.status || "Unknown").toString().trim(),
+      zone: r.zone || r.area || "General"
     }));
   }
 
   /* ======================
      TABLE
-  ====================== */
+====================== */
   function renderTable() {
     if (!tableBody) return;
 
-    tableBody.innerHTML = reports.map(r => `
-      <tr>
-        <td>${r._id.slice(-6)}</td>
-        <td>${r.title || "-"}</td>
-        <td>${r.zone}</td>
-        <td>${r.status}</td>
-        <td>${new Date(r.createdAt).toLocaleDateString()}</td>
-      </tr>
-    `).join("");
-  }
+    tableBody.innerHTML = "";
 
-  /* ======================
-     AGGREGATE
-  ====================== */
-  function aggregate() {
-    const zone = {}, status = {}, dept = {};
+    if (!reports.length) {
+      tableBody.innerHTML =
+        `<tr><td colspan="5">No reports found</td></tr>`;
+      return;
+    }
+
     reports.forEach(r => {
-      zone[r.zone] = (zone[r.zone] || 0) + 1;
-      status[r.status] = (status[r.status] || 0) + 1;
-      dept[r.department] = (dept[r.department] || 0) + 1;
+      tableBody.innerHTML += `
+        <tr>
+          <td>${r._id || "-"}</td>
+          <td>${r.title || "-"}</td>
+          <td>${r.zone}</td>
+          <td>${r.status}</td>
+          <td>${new Date(r.createdAt || Date.now()).toLocaleDateString()}</td>
+        </tr>
+      `;
     });
-    return { zone, status, dept };
   }
 
   /* ======================
-     CHART OPTIONS (LOCKED)
-  ====================== */
-  const lockedOptions = {
-    responsive: false,          
-    animation: false,
-    devicePixelRatio: 1,
-    plugins: {
-      legend: { display: true }
-    },
-    scales: {
-      y: { beginAtZero: true }
-    }
-  };
+     CHARTS
+====================== */
+  function renderCharts() {
+    const zoneCount = {};
+    const statusCount = {};
 
-  /* ======================
-     UPDATE CHARTS (STABLE)
-  ====================== */
-  function updateCharts() {
-    if (typeof Chart === "undefined") return;
+    reports.forEach(r => {
+      zoneCount[r.zone] = (zoneCount[r.zone] || 0) + 1;
+      statusCount[r.status] = (statusCount[r.status] || 0) + 1;
+    });
 
-    const { zone, status, dept } = aggregate();
+    zoneChart?.destroy();
+    statusChart?.destroy();
 
-    // ZONE
-    if (zoneCanvas) {
-      if (!zoneChart) {
-        zoneChart = new Chart(zoneCanvas, {
-          type: "bar",
-          data: {
-            labels: Object.keys(zone),
-            datasets: [{ data: Object.values(zone) }]
-          },
-          options: lockedOptions
-        });
-      } else {
-        zoneChart.data.labels = Object.keys(zone);
-        zoneChart.data.datasets[0].data = Object.values(zone);
-        zoneChart.update("none");
+    zoneChart = new Chart(zoneChartEl, {
+      type: "bar",
+      data: {
+        labels: Object.keys(zoneCount),
+        datasets: [{
+          label: "Reports",
+          data: Object.values(zoneCount),
+          backgroundColor: "#4f46e5"
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
       }
-    }
+    });
 
-    // STATUS
-    if (statusCanvas) {
-      if (!statusChart) {
-        statusChart = new Chart(statusCanvas, {
-          type: "doughnut",
-          data: {
-            labels: Object.keys(status),
-            datasets: [{ data: Object.values(status) }]
-          },
-          options: { ...lockedOptions, scales: undefined }
-        });
-      } else {
-        statusChart.data.labels = Object.keys(status);
-        statusChart.data.datasets[0].data = Object.values(status);
-        statusChart.update("none");
+    statusChart = new Chart(statusChartEl, {
+      type: "doughnut",
+      data: {
+        labels: Object.keys(statusCount),
+        datasets: [{
+          data: Object.values(statusCount),
+          backgroundColor: [
+            "#2563eb",
+            "#f59e0b",
+            "#16a34a",
+            "#6b7280"
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
       }
-    }
-
-    // DEPARTMENT
-    if (deptCanvas) {
-      if (!deptChart) {
-        deptChart = new Chart(deptCanvas, {
-          type: "bar",
-          data: {
-            labels: Object.keys(dept),
-            datasets: [{ data: Object.values(dept) }]
-          },
-          options: lockedOptions
-        });
-      } else {
-        deptChart.data.labels = Object.keys(dept);
-        deptChart.data.datasets[0].data = Object.values(dept);
-        deptChart.update("none");
-      }
-    }
+    });
   }
 
   /* ======================
-     VISIBILITY CONTROL
-  ====================== */
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) fetchReports();
+     MAP
+====================== */
+  function initMap() {
+    if (!map) {
+      map = L.map("map").setView([23.02, 72.57], 12);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap"
+      }).addTo(map);
+
+      markerLayer = L.layerGroup().addTo(map);
+    }
+
+    markerLayer.clearLayers();
+
+    reports.forEach(r => {
+      if (!r.location) return;
+
+      const [lat, lng] = r.location
+        .split(",")
+        .map(v => Number(v.trim()));
+
+      if (!lat || !lng) return;
+
+      L.marker([lat, lng])
+        .addTo(markerLayer)
+        .bindPopup(`
+          <strong>${r.title || "Report"}</strong><br>
+          ${r.zone}<br>
+          Status: ${r.status}
+        `);
+    });
+  }
+
+  /* ======================
+     VIEW TOGGLE
+====================== */
+  mapBtn?.addEventListener("click", () => {
+    listView.classList.add("hidden");
+    mapView.classList.remove("hidden");
+
+    mapBtn.classList.add("active");
+    listBtn.classList.remove("active");
+
+    setTimeout(() => map?.invalidateSize(), 200);
+  });
+
+  listBtn?.addEventListener("click", () => {
+    mapView.classList.add("hidden");
+    listView.classList.remove("hidden");
+
+    listBtn.classList.add("active");
+    mapBtn.classList.remove("active");
   });
 
   /* ======================
      INIT
-  ====================== */
-  fetchReports();
-  setInterval(fetchReports, 30000);
-
-  console.log("Analytics running in FULLY STABLE mode");
+====================== */
+  loadReports();
+  console.log("Reports Analytics Loaded Successfully");
 
 });

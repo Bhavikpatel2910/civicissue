@@ -6,9 +6,9 @@
 const session = JSON.parse(localStorage.getItem("citizenSession"));
 const lastReport = JSON.parse(localStorage.getItem("lastSubmittedReport"));
 
-if (!session || !lastReport) {
-  window.location.href = "/civic/html/auth/LoginPage.html";
-}
+// if (!session || !lastReport) {
+//   window.location.href = "/civic/html/auth/LoginPage.html";
+// }
 
 /* ===============================
    Populate Report Summary
