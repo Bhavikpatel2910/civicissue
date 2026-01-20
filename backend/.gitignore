@@ -1,1 +1,14 @@
+# dependencies
+node_modules/
+
+# environment variables
 .env
+
+# uploads
+uploads/
+
+# temp files
+tempCodeRunnerFile.js
+
+# logs
+*.log
