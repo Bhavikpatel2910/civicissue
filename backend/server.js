@@ -39,9 +39,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /* ======================
-   STATIC FILES (IMPORTANT)
+   STATIC FILES
 ====================== */
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static("uploads"));
+
 
 /* ======================
    ROUTES (NO COLLISION)
