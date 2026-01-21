@@ -12,9 +12,9 @@
 
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="../../css/auth/LoginPage.css">
 
-  <!-- ✅ CORRECT CSS PATH -->
-  <link rel="stylesheet" href="../../css/auth/LoginPage.css">
+
 </head>
 <body>
 
@@ -42,22 +42,18 @@
 
     <!-- Role Selector -->
     <div class="role-switch">
-      <button type="button" class="role active" data-role="citizen">Citizen</button>
-      <button type="button" class="role" data-role="staff">City Staff</button>
+      <button class="role active" data-role="citizen">Citizen</button>
+      <button class="role" data-role="staff">City Staff</button>
+      
     </div>
 
-    <!-- LOGIN FORM -->
+    <!-- Form -->
     <form id="loginForm" novalidate>
 
       <!-- Email -->
       <div class="field">
         <label>Email Address</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="name@example.com"
-          autocomplete="email"
-        >
+        <input id="email" type="email" placeholder="name@example.com" autocomplete="email">
         <small class="error" id="emailError"></small>
       </div>
 
@@ -66,6 +62,7 @@
         <div class="field-row">
           <label>Password</label>
           <a href="/civic/html/auth/forgetpassword.html">Forgot Password?</a>
+
         </div>
 
         <div class="password-wrap">
@@ -81,26 +78,50 @@
         <small class="error" id="passwordError"></small>
       </div>
 
-      <!-- ✅ SUBMIT BUTTON (NO <a> TAG) -->
+      <!-- Submit -->
       <button type="submit" class="btn-primary" id="submitBtn">
-        Sign In
+        <a href="../user/UserDashboard.html" class="btn-text">Sign In</a>
       </button>
 
     </form>
 
+    <!-- Divider -->
     <div class="divider">
       <span>Or continue with</span>
     </div>
 
-    <button class="admin-login-btn" id="adminLoginBtn" type="button">
-      Admin Login (Government officers of municipal corporation)
-    </button>
+    <!-- Social Login -->
+<!-- <div class="social-buttons">
+  <button class="social-btn" id="googleBtn" type="button">
+    <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+    Google
+  </button>
+
+  <button class="social-btn" type="button" id="appleBtn">
+    <img src="https://www.svgrepo.com/show/475647/apple-color.svg">
+    Apple ID
+  </button>
+</div> -->
+
+
+<button class="admin-login-btn" id="adminLoginBtn">
+  Admin Login (Government officers of municipal corporation)
+</button>
+
+
+    <!-- Staff SSO -->
+    <!-- <div class="sso-link" id="ssoLink">
+      <a href="#">
+        <span class="material-symbols-outlined">domain_verification</span>
+        Login with Municipal SSO
+      </a>
+    </div> -->
 
     <div class="login-footer">
       Don’t have an account?
-      <a href="/civic/html/auth/Register.html">Register now</a>
-    </div>
+      <a href="../../html/auth/Register.html">Register now</a>
 
+    </div>
   </div>
 
   <div class="trust">
@@ -118,7 +139,6 @@
   </div>
 </footer>
 
-<!-- ✅ CORRECT JS PATH -->
-<script src="/civic/js/auth/loginpage.js"></script>
+<script src="../../js/auth/loginpage.js"></script>
 </body>
 </html>

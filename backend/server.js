@@ -2,8 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-
+// ======================
+// ROUTES
+// ======================
 import adminAuthRoutes from "./routes/adminAuth.routes.js";
 import issueRoutes from "./routes/issue.routes.js";
 import departmentRoutes from "./routes/department.routes.js";
@@ -16,19 +20,28 @@ import communityRoutes from "./routes/community.routes.js";
 
 dotenv.config();
 
-/* ======================
-   INIT APP
-====================== */
+// ======================
+// ESM FIX (__dirname)
+// ======================
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ======================
+// INIT APP
+// ======================
 const app = express();
 
+// ======================
+// REQUEST LOGGER
+// ======================
 app.use((req, res, next) => {
-  console.log(" REQUEST:", req.method, req.originalUrl);
+  console.log("REQUEST:", req.method, req.originalUrl);
   next();
 });
 
-/* ======================
-   MIDDLEWARE
-====================== */
+// ======================
+// MIDDLEWARE
+// ======================
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -38,47 +51,36 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* ======================
-   STATIC FILES
-====================== */
+// ======================
+// STATIC FILES
+// ======================
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
-/* ======================
-   ROUTES (NO COLLISION)
-====================== */
-
-// Auth (login / register / dashboard / community)
+// ======================
+// ROUTES
+// ======================
 app.use("/api", authRoutes);
-
-// Staff
 app.use("/api/staff", staffRoutes);
-
-
-// Reports
 app.use("/api", reportRoutes);
+app.use("/api/community", communityRoutes);
 
-//communityRoutes
-app.use("/api/Community", communityRoutes);
-
-// Admin
 app.use("/api/admin", adminAuthRoutes);
 app.use("/api/admin/issues", issueRoutes);
 app.use("/api/admin/departments", departmentRoutes);
 app.use("/api/admin/settings", adminSettingsRoutes);
 app.use("/api/admin", adminRoutes);
 
-/* ======================
-   ROOT CHECK
-====================== */
+// ======================
+// ROOT CHECK
+// ======================
 app.get("/", (req, res) => {
   res.send("Backend running successfully");
 });
 
-/* ======================
-   DATABASE
-====================== */
+// ======================
+// DATABASE
+// ======================
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
@@ -87,12 +89,11 @@ mongoose
     process.exit(1);
   });
 
-/* ======================
-   START SERVER
-====================== */
+// ======================
+// START SERVER
+// ======================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
